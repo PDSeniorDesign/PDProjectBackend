@@ -27,6 +27,7 @@ public class ServiceRequestsController {
 	
 	@Autowired
     private ServiceRequestDao serviceRequestDao;
+	
 
     @GetMapping
     public List<ServiceRequest> serviceRequests(ModelMap models) {
@@ -34,7 +35,7 @@ public class ServiceRequestsController {
     }
     
     @GetMapping("/{id}")
-    public ServiceRequest get( @PathVariable Integer id ) {
+    public ServiceRequest get( @PathVariable String id ) {
     	ServiceRequest s = serviceRequestDao.getServiceRequest(id);
     	if (s == null) throw new ResponseStatusException( HttpStatus.NOT_FOUND, 
     			"Service Request not found" );
@@ -49,13 +50,13 @@ public class ServiceRequestsController {
     
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Integer id, @RequestBody ServiceRequest s) {
+    public void update(@PathVariable String id, @RequestBody ServiceRequest s) {
     	
     	ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(id);
     	
     	originalServiceRequest.setCreateDate(s.getCreateDate());
     	originalServiceRequest.setSubmitDate(s.getSubmitDate());
-    	originalServiceRequest.setUuid(s.getUuid());
+    	originalServiceRequest.setRequestStatus(s.getRequestStatus());
     	originalServiceRequest.setRegistrationType(s.getRegistrationType());
     	originalServiceRequest.setRequestType(s.getRequestType());
     	originalServiceRequest.setLastName(s.getLastName());
@@ -139,7 +140,7 @@ public class ServiceRequestsController {
     
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Integer id, @RequestBody Map<String,Object> patch ) {
+    public void update(@PathVariable String id, @RequestBody Map<String,Object> patch ) {
     	
     	ServiceRequest s = serviceRequestDao.getServiceRequest(id);
     	
@@ -158,6 +159,9 @@ public class ServiceRequestsController {
 	    		//A.V.
 	    		case "requestType":
 	    			s.setRequestType((String) patch.get(key));
+	    			break;
+	    		case "requestStatus":
+	    			s.setRequestStatus((String) patch.get(key));
 	    			break;
 	    		case "lastName":
 	    			s.setLastName((String) patch.get(key));
@@ -391,7 +395,7 @@ public class ServiceRequestsController {
     
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable String id) {
     	serviceRequestDao.deleteServiceRequest(id);
     }
 }

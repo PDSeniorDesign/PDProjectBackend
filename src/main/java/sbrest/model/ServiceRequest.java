@@ -1,9 +1,12 @@
 package sbrest.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "service_requests")
@@ -11,14 +14,14 @@ public class ServiceRequest {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "VARCHAR(255)")
+    private String id;
 	
 	private String createDate;
 	private String submitDate;
-	
-	private String uuid;
-	
+	private String requestStatus;
 	private String registrationType;
 	private String requestType;
 	private String lastName;
@@ -96,10 +99,10 @@ public class ServiceRequest {
 	private boolean socialNetworkingTwitter;
 	private boolean socialNetworkingLinkedIn;
 	
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getCreateDate() {
@@ -114,11 +117,11 @@ public class ServiceRequest {
 	public void setSubmitDate(String submitDate) {
 		this.submitDate = submitDate;
 	}
-	public String getUuid() {
-		return uuid;
+	public String getRequestStatus() {
+		return requestStatus;
 	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setRequestStatus(String requestStatus) {
+		this.requestStatus = requestStatus;
 	}
 	public String getRegistrationType() {
 		return registrationType;
