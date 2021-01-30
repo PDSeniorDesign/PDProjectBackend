@@ -17,7 +17,7 @@ public class ServiceRequestDaoImpl implements ServiceRequestDao {
     private EntityManager entityManager;
 	
 	@Override
-	public ServiceRequest getServiceRequest(Integer id) {
+	public ServiceRequest getServiceRequest(String id) {
 		 return entityManager.find(ServiceRequest.class, id);
 	}
 
@@ -35,8 +35,8 @@ public class ServiceRequestDaoImpl implements ServiceRequestDao {
     
     @Override
     @Transactional
-    public void deleteServiceRequest(Integer id) {
-    	entityManager.remove(entityManager.createQuery("SELECT s FROM ServiceRequest s WHERE s.id = " + id, ServiceRequest.class)
+    public void deleteServiceRequest(String id) {
+    	entityManager.remove(entityManager.createQuery("SELECT s FROM ServiceRequest s WHERE s.id = '" + id + "'", ServiceRequest.class)
                 .getResultList().get(0));
     }
 }
