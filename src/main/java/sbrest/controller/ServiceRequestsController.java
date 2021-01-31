@@ -35,6 +35,7 @@ public class ServiceRequestsController {
         return serviceRequestDao.getServiceRequests();
     }
     
+	@CrossOrigin(origins = "http//:localhost:4200")
     @GetMapping("/{id}")
     public ServiceRequest get( @PathVariable String id ) {
     	ServiceRequest s = serviceRequestDao.getServiceRequest(id);
