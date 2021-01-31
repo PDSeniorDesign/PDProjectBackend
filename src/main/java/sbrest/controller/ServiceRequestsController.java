@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +29,7 @@ public class ServiceRequestsController {
 	@Autowired
     private ServiceRequestDao serviceRequestDao;
 	
-
+	@CrossOrigin(origins = "http//:localhost:4200")
     @GetMapping
     public List<ServiceRequest> serviceRequests(ModelMap models) {
         return serviceRequestDao.getServiceRequests();
@@ -42,6 +43,7 @@ public class ServiceRequestsController {
     	return s;
     }
     
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceRequest add(@RequestBody ServiceRequest s) {
