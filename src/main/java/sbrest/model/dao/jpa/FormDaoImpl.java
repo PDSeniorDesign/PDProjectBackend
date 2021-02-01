@@ -37,7 +37,8 @@ public class FormDaoImpl implements FormDao {
     @Override
     @Transactional
     public void deleteForm(Integer id) {
-    	entityManager.remove(entityManager.createQuery("SELECT f FROM Form f WHERE f.id = " + id, Form.class)
+    	String query = "SELECT f FROM Form f WHERE f.id = :id";
+    	entityManager.remove(entityManager.createQuery(query, Form.class).setParameter("id", id)
                 .getResultList().get(0));
     }
     

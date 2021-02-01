@@ -36,7 +36,8 @@ public class MappingDaoImpl implements MappingDao {
     @Override
     @Transactional
     public void deleteMapping(Integer id) {
-    	entityManager.remove(entityManager.createQuery("SELECT m FROM Mapping m WHERE m.id = " + id, Mapping.class)
+    	String query = "SELECT m FROM Mapping m WHERE m.id = :id";
+    	entityManager.remove(entityManager.createQuery(query, Mapping.class).setParameter("id", id)
                 .getResultList().get(0));
     }
     
