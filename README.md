@@ -100,3 +100,5 @@ Your backend is now running! Feel free to test the service_requests endpoint by 
 "socialNetworkingTwitter":false,
 "socialNetworkingLinkedIn":false
 }
+
+More detailed instructions in src/main/resources/HowToRunBackend.pdf
