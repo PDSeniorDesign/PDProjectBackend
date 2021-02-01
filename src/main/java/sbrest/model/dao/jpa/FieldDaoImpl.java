@@ -37,8 +37,9 @@ public class FieldDaoImpl implements FieldDao {
     @Override
     @Transactional
     public void deleteField(Integer id) {
-    	entityManager.remove(entityManager.createQuery("SELECT f FROM Field f WHERE f.id = " + id, Field.class)
-                .getResultList().get(0));
+    	String query = "SELECT f FROM Field f WHERE f.id = :id";
+    	entityManager.remove(entityManager.createQuery(query, Field.class).setParameter("id", id)
+    	                .getResultList().get(0));
     }
     
 }

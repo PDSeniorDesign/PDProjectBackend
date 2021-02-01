@@ -36,7 +36,8 @@ public class ServiceRequestDaoImpl implements ServiceRequestDao {
     @Override
     @Transactional
     public void deleteServiceRequest(String id) {
-    	entityManager.remove(entityManager.createQuery("SELECT s FROM ServiceRequest s WHERE s.id = '" + id + "'", ServiceRequest.class)
+    	String query = "SELECT s FROM ServiceRequest s WHERE s.id = :id";
+    	entityManager.remove(entityManager.createQuery(query, ServiceRequest.class).setParameter("id", id)
                 .getResultList().get(0));
     }
 }
