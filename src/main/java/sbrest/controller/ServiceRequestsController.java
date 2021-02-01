@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sbrest.model.ServiceRequest;
 import sbrest.model.dao.ServiceRequestDao;
 
+@CrossOrigin(origins = "http//:localhost:4200")
 @RestController
 @RequestMapping("/service_requests")
 public class ServiceRequestsController {
@@ -29,13 +30,13 @@ public class ServiceRequestsController {
 	@Autowired
     private ServiceRequestDao serviceRequestDao;
 	
-	@CrossOrigin(origins = "http//:localhost:4200")
+
     @GetMapping
     public List<ServiceRequest> serviceRequests(ModelMap models) {
         return serviceRequestDao.getServiceRequests();
     }
-    
-	@CrossOrigin(origins = "http//:localhost:4200")
+
+
     @GetMapping("/{id}")
     public ServiceRequest get( @PathVariable String id ) {
     	ServiceRequest s = serviceRequestDao.getServiceRequest(id);
@@ -44,8 +45,7 @@ public class ServiceRequestsController {
     	return s;
     }
     
-
-    @CrossOrigin(origins = "http://localhost:4200")
+  
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceRequest add(@RequestBody ServiceRequest s) {
