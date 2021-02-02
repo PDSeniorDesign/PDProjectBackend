@@ -22,7 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sbrest.model.ServiceRequest;
 import sbrest.model.dao.ServiceRequestDao;
 
-@CrossOrigin(origins = "http//:localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/service_requests")
 public class ServiceRequestsController {
