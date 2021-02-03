@@ -1,5 +1,10 @@
 package sbrest.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,9 +24,13 @@ public class ServiceRequest {
     @Column(name = "id", columnDefinition = "VARCHAR(255)")
     private String id;
 	
+	
+	private Integer requestNumber;
+
 	private String createDate;
 	private String submitDate;
 	private String requestStatus;
+	private boolean isComplete;
 	private String registrationType;
 	private String requestType;
 	private String lastName;
@@ -98,6 +107,13 @@ public class ServiceRequest {
 	private boolean socialNetworkingFacebook; 
 	private boolean socialNetworkingTwitter;
 	private boolean socialNetworkingLinkedIn;
+	
+	public ServiceRequest() {
+		String pattern = "MM/dd/yyyy HH:mm:ss";
+		DateFormat d = new SimpleDateFormat(pattern);
+		Date currentDate = Calendar.getInstance().getTime();        
+		this.createDate = d.format(currentDate);
+	}
 	
 	public String getId() {
 		return id;
@@ -578,6 +594,18 @@ public class ServiceRequest {
 	}
 	public void setSocialNetworkingLinkedIn(boolean socialNetworkingLinkedIn) {
 		this.socialNetworkingLinkedIn = socialNetworkingLinkedIn;
+	}
+	public boolean isComplete() {
+		return isComplete;
+	}
+	public void setComplete(boolean isComplete) {
+		this.isComplete = isComplete;
+	}
+	public Integer getRequestNumber() {
+		return requestNumber;
+	}
+	public void setRequestNumber(Integer requestNumber) {
+		this.requestNumber = requestNumber;
 	}
 
 	
