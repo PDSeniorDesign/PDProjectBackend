@@ -22,7 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sbrest.model.ServiceRequest;
 import sbrest.model.dao.ServiceRequestDao;
 
-@CrossOrigin(origins = "http//:localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/service_requests")
 public class ServiceRequestsController {
@@ -59,6 +59,8 @@ public class ServiceRequestsController {
     	
     	originalServiceRequest.setCreateDate(s.getCreateDate());
     	originalServiceRequest.setSubmitDate(s.getSubmitDate());
+    	originalServiceRequest.setRequestNumber(s.getRequestNumber());
+    	originalServiceRequest.setComplete(s.isComplete());
     	originalServiceRequest.setRequestStatus(s.getRequestStatus());
     	originalServiceRequest.setRegistrationType(s.getRegistrationType());
     	originalServiceRequest.setRequestType(s.getRequestType());
@@ -156,9 +158,13 @@ public class ServiceRequestsController {
 	    		case "submitDate":
 	    			s.setSubmitDate( (String) patch.get(key));
 	    			break;  
+	    		case "requestNumber":
+	    			s.setRequestNumber((Integer) patch.get(key));
 	    		case "registrationType":
 	    			s.setRegistrationType( (String) patch.get(key));
 	    			break; 
+	    		case "isComplete" :
+	    			s.setComplete((boolean) patch.get(key));
 	    		//A.V.
 	    		case "requestType":
 	    			s.setRequestType((String) patch.get(key));
