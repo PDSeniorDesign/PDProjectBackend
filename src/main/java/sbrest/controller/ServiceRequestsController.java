@@ -59,7 +59,6 @@ public class ServiceRequestsController {
     	
     	originalServiceRequest.setCreateDate(s.getCreateDate());
     	originalServiceRequest.setSubmitDate(s.getSubmitDate());
-    	originalServiceRequest.setRequestNumber(s.getRequestNumber());
     	originalServiceRequest.setComplete(s.isComplete());
     	originalServiceRequest.setRequestStatus(s.getRequestStatus());
     	originalServiceRequest.setRegistrationType(s.getRegistrationType());
@@ -158,8 +157,6 @@ public class ServiceRequestsController {
 	    		case "submitDate":
 	    			s.setSubmitDate( (String) patch.get(key));
 	    			break;  
-	    		case "requestNumber":
-	    			s.setRequestNumber((Integer) patch.get(key));
 	    		case "registrationType":
 	    			s.setRegistrationType( (String) patch.get(key));
 	    			break; 
