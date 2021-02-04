@@ -9,17 +9,17 @@ import javax.persistence.Table;
 public class RequestStatus {
 	
 	@Id
-    private Integer requestNumber;
+    private String id;
 	
 	private String requestStatus;
 	private String firstName;
 	private String lastName;
 	
-	public Integer getRequestNumber() {
-		return requestNumber;
+	public String getId() {
+		return id;
 	}
-	public void setRequestNumber(Integer requestNumber) {
-		this.requestNumber = requestNumber;
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getRequestStatus() {
 		return requestStatus;

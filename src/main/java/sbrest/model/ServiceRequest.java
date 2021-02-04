@@ -19,9 +19,12 @@ public class ServiceRequest {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-    @GeneratedValue
+	@GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "VARCHAR(255)")
+    private String id;
+    
     private Integer requestNumber;
-
 	private String createDate;
 	private String submitDate;
 	private String requestStatus;
@@ -110,7 +113,12 @@ public class ServiceRequest {
 		this.createDate = d.format(currentDate);
 	}
 	
-
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getCreateDate() {
 		return createDate;
 	}
