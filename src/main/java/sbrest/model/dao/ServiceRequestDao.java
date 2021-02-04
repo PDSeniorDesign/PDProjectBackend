@@ -5,7 +5,7 @@ import java.util.List;
 import sbrest.model.ServiceRequest;
 
 public interface ServiceRequestDao {
-	ServiceRequest getServiceRequest(String id);
+	ServiceRequest getServiceRequest(Integer id);
 
     List<ServiceRequest> getServiceRequests();
 

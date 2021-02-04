@@ -13,31 +13,31 @@ import sbrest.model.dao.ServiceRequestDao;
 
 @Repository
 public class ServiceRequestDaoImpl implements ServiceRequestDao {
-	@PersistenceContext
+    @PersistenceContext
     private EntityManager entityManager;
-	
-	@Override
-	public ServiceRequest getServiceRequest(String id) {
-		 return entityManager.find(ServiceRequest.class, id);
-	}
 
-	@Override
+    @Override
+    public ServiceRequest getServiceRequest(Integer id) {
+        return entityManager.find(ServiceRequest.class, id);
+    }
+
+    @Override
     public List<ServiceRequest> getServiceRequests() {
-		return entityManager.createQuery("from ServiceRequest", ServiceRequest.class)
+        return entityManager.createQuery("from ServiceRequest", ServiceRequest.class)
                 .getResultList();
     }
 
     @Override
     @Transactional
     public ServiceRequest saveServiceRequest(ServiceRequest serviceRequest) {
-    	return entityManager.merge(serviceRequest);
+        return entityManager.merge(serviceRequest);
     }
-    
+
     @Override
     @Transactional
     public void deleteServiceRequest(String id) {
-    	String query = "SELECT s FROM ServiceRequest s WHERE s.id = :id";
-    	entityManager.remove(entityManager.createQuery(query, ServiceRequest.class).setParameter("id", id)
+        String query = "SELECT s FROM ServiceRequest s WHERE s.id = :id";
+        entityManager.remove(entityManager.createQuery(query, ServiceRequest.class).setParameter("id", id)
                 .getResultList().get(0));
     }
 }
