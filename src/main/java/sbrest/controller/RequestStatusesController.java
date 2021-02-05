@@ -18,10 +18,10 @@ public class RequestStatusesController {
 	@Autowired
 	private ServiceRequestDao serviceRequestDao;
 
-	@GetMapping("/{id}")
-	public RequestStatusResponse getRequestStatusById(@PathVariable Integer id) {
+	@GetMapping("/{requestNumber}")
+	public RequestStatusResponse getRequestStatusByRequestNumber(@PathVariable Integer requestNumber) {
 		// TODO: Handle null pointers (when getServiceReqeust returns null)
-		ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(id);
+		ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 		RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestNumber(),
 				serviceRequest.getRequestStatus(), serviceRequest.getFirstName(), serviceRequest.getLastName()); // Can
 																													// return
@@ -34,16 +34,24 @@ public class RequestStatusesController {
 
 // A representation of what the server will return
 class RequestStatusResponse {
+	private Integer requestNumber;
 	private String requestStatus;
 	private String firstName;
 	private String lastName;
-	private Integer requestNumber;
 
 	public RequestStatusResponse(Integer requestNumber, String requestStatus, String firstName, String lastName) {
-
+		this.requestNumber = requestNumber;
 		this.requestStatus = requestStatus;
 		this.firstName = firstName;
 		this.lastName = lastName;
+
+	}
+
+	public Integer getRequestNumber() {
+		return requestNumber;
+	}
+
+	public void setRequestNumber(Integer requestNumber) {
 		this.requestNumber = requestNumber;
 	}
 
@@ -69,14 +77,6 @@ class RequestStatusResponse {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public Integer getRequestNumber() {
-		return requestNumber;
-	}
-
-	public void setRequestNumber(Integer requestNumber) {
-		this.requestNumber = requestNumber;
 	}
 
 }
