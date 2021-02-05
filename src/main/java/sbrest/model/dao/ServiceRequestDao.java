@@ -5,11 +5,11 @@ import java.util.List;
 import sbrest.model.ServiceRequest;
 
 public interface ServiceRequestDao {
-	ServiceRequest getServiceRequest(Integer id);
+	ServiceRequest getServiceRequest(Integer requestNumber);
 
     List<ServiceRequest> getServiceRequests();
 
     ServiceRequest saveServiceRequest(ServiceRequest serviceRequest);
     
-    void deleteServiceRequest(String id);
+    void deleteServiceRequest(Integer requestNumber);
 }

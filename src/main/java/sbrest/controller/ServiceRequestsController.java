@@ -40,9 +40,9 @@ public class ServiceRequestsController {
 		return serviceRequestDao.getServiceRequests();
 	}
 
-	@GetMapping("/{id}")
-	public ServiceRequest get(@PathVariable Integer id) {
-		ServiceRequest s = serviceRequestDao.getServiceRequest(id);
+	@GetMapping("/{requestNumber}")
+	public ServiceRequest get(@PathVariable Integer requestNumber) {
+		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 		if (s == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service Request not found");
 		return s;
@@ -67,11 +67,11 @@ public class ServiceRequestsController {
 		return serviceRequestDao.saveServiceRequest(s);
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/{requestNumber}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable Integer id, @RequestBody ServiceRequest s) {
+	public void update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) {
 
-		ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(id);
+		ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 
 		originalServiceRequest.setCreateDate(s.getCreateDate());
 		originalServiceRequest.setSubmitDate(s.getSubmitDate());
@@ -158,11 +158,11 @@ public class ServiceRequestsController {
 
 	}
 
-	@PatchMapping("/{id}")
+	@PatchMapping("/{requestNumber}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable Integer id, @RequestBody Map<String, Object> patch) {
+	public void update(@PathVariable Integer requestNumber, @RequestBody Map<String, Object> patch) {
 
-		ServiceRequest s = serviceRequestDao.getServiceRequest(id);
+		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 
 		for (String key : patch.keySet()) {
 
@@ -415,9 +415,9 @@ public class ServiceRequestsController {
 		s = serviceRequestDao.saveServiceRequest(s);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{requestNumber}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable String id) {
-		serviceRequestDao.deleteServiceRequest(id);
+	public void delete(@PathVariable Integer requestNumber) {
+		serviceRequestDao.deleteServiceRequest(requestNumber);
 	}
 }
