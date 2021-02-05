@@ -15,33 +15,68 @@ import sbrest.model.dao.ServiceRequestDao;
 @RequestMapping("/request_statuses")
 public class RequestStatusesController {
 
+	@Autowired
+	private ServiceRequestDao serviceRequestDao;
 
-    @Autowired
-    private ServiceRequestDao serviceRequestDao;
-
-    @GetMapping("/{id}")
-    public RequestStatusResponse getRequestStatusById(@PathVariable Integer id) {
-        // TODO: Handle null pointers (when getServiceReqeust returns null)
-        ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(id);
-        RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestStatus()); // Can return null pointer
-        return res;
-    }
+	@GetMapping("/{id}")
+	public RequestStatusResponse getRequestStatusById(@PathVariable Integer id) {
+		// TODO: Handle null pointers (when getServiceReqeust returns null)
+		ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(id);
+		RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestNumber(),
+				serviceRequest.getRequestStatus(), serviceRequest.getFirstName(), serviceRequest.getLastName()); // Can
+																													// return
+																													// null
+		// pointer
+		return res;
+	}
 
 }
 
 // A representation of what the server will return
 class RequestStatusResponse {
-    private String requestStatus;
+	private String requestStatus;
+	private String firstName;
+	private String lastName;
+	private Integer requestNumber;
 
-    public RequestStatusResponse(String requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+	public RequestStatusResponse(Integer requestNumber, String requestStatus, String firstName, String lastName) {
 
-    public String getRequestStatus() {
-        return requestStatus;
-    }
+		this.requestStatus = requestStatus;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.requestNumber = requestNumber;
+	}
 
-    public void setRequestStatus(String requestStatus) {
-        this.requestStatus = requestStatus;
-    }
+	public String getRequestStatus() {
+		return requestStatus;
+	}
+
+	public void setRequestStatus(String requestStatus) {
+		this.requestStatus = requestStatus;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Integer getRequestNumber() {
+		return requestNumber;
+	}
+
+	public void setRequestNumber(Integer requestNumber) {
+		this.requestNumber = requestNumber;
+	}
+
 }
