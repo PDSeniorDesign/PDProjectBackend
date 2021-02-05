@@ -23,7 +23,7 @@ public class RequestStatusesController {
     public RequestStatusResponse getRequestStatusById(@PathVariable Integer id) {
         // TODO: Handle null pointers (when getServiceReqeust returns null)
         ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(id);
-        RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestStatus());
+        RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestStatus()); // Can return null pointer
         return res;
     }
 
