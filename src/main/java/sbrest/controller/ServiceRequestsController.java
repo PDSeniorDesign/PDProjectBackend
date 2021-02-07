@@ -407,6 +407,8 @@ public class ServiceRequestsController {
 			case "socialNetworkingLinkedIn":
 				s.setSocialNetworkingLinkedIn((boolean) patch.get(key));
 				break;
+			default:
+				break;
 
 			}
 
