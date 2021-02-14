@@ -178,6 +178,7 @@ public class ServiceRequestsController {
 				break;
 			case "isComplete":
 				s.setComplete((boolean) patch.get(key));
+				break;
 				// A.V.
 			case "requestType":
 				s.setRequestType((String) patch.get(key));
