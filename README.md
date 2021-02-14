@@ -43,14 +43,10 @@ Your backend is now running! Feel free to test the service_requests endpoint by 
 
 ```
 {
-    "createDate":"10/15/2020",
-    "submitDate":"11/01/2020",
     "registrationType":"New",
-    "requestType":null,
     "lastName":"Doe",
     "firstName":"John",
     "middleInitial":"F",
-    "requestStatus":"”Active”",
     "employeeNumber":15,
     "hostedId":265,
     "departmentName":"Example Department",
