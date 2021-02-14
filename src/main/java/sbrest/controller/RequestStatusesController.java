@@ -22,12 +22,17 @@ public class RequestStatusesController {
 	public RequestStatusResponse getRequestStatusByRequestNumber(@PathVariable Integer requestNumber) {
 		// TODO: Handle null pointers (when getServiceReqeust returns null)
 		ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(requestNumber);
-		RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestNumber(),
-				serviceRequest.getRequestStatus(), serviceRequest.getFirstName(), serviceRequest.getLastName()); // Can
-																													// return
-																													// null
-		// pointer
-		return res;
+		if (serviceRequest != null) {
+			RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestNumber(),
+					serviceRequest.getRequestStatus(), serviceRequest.getFirstName(), serviceRequest.getLastName()); // Can
+																														// return
+																														// null
+			// pointer
+			return res;
+		}
+		else {
+			return null;
+		}
 	}
 
 }
