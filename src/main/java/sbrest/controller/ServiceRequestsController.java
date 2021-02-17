@@ -68,8 +68,8 @@ public class ServiceRequestsController {
 	}
 
 	@PutMapping("/{requestNumber}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) {
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) {
 
 		ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 
@@ -155,12 +155,13 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSocialNetworkingLinkedIn(s.isSocialNetworkingLinkedIn());
 
 		originalServiceRequest = serviceRequestDao.saveServiceRequest(originalServiceRequest);
+		return originalServiceRequest;
 
 	}
 
 	@PatchMapping("/{requestNumber}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable Integer requestNumber, @RequestBody Map<String, Object> patch) {
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody Map<String, Object> patch) {
 
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 
@@ -416,6 +417,7 @@ public class ServiceRequestsController {
 		}
 
 		s = serviceRequestDao.saveServiceRequest(s);
+		return s;
 	}
 
 	@DeleteMapping("/{requestNumber}")
