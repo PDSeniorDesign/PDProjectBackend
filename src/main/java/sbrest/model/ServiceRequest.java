@@ -107,6 +107,7 @@ public class ServiceRequest {
 		DateFormat d = new SimpleDateFormat(pattern);
 		Date currentDate = Calendar.getInstance().getTime();
 		this.createDate = d.format(currentDate);
+		this.requestStatus = "Draft";
 	}
 
 	public String getCreateDate() {
@@ -747,6 +748,13 @@ public class ServiceRequest {
 
 	public void setComplete(boolean isComplete) {
 		this.isComplete = isComplete;
+		if (this.isComplete) {
+			this.requestStatus = "Submitted";
+			String pattern = "MM/dd/yyyy HH:mm:ss";
+			DateFormat d = new SimpleDateFormat(pattern);
+			Date currentDate = Calendar.getInstance().getTime();
+			this.submitDate = d.format(currentDate);
+		}
 	}
 
 	public Integer getRequestNumber() {
