@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import sbrest.signapi.Agreements;
+
 @Entity
 @Table(name = "service_requests")
 public class ServiceRequest {
@@ -23,6 +25,7 @@ public class ServiceRequest {
 
 	private String createDate;
 	private String submitDate;
+	private boolean isEmployee;
 	private String requestStatus;
 	private boolean isComplete;
 	private String registrationType;
@@ -124,6 +127,14 @@ public class ServiceRequest {
 
 	public void setSubmitDate(String submitDate) {
 		this.submitDate = submitDate;
+	}
+
+	public boolean isEmployee() {
+		return isEmployee;
+	}
+
+	public void setEmployee(boolean isEmployee) {
+		this.isEmployee = isEmployee;
 	}
 
 	public String getRequestStatus() {
@@ -746,7 +757,7 @@ public class ServiceRequest {
 		return isComplete;
 	}
 
-	public void setComplete(boolean isComplete) {
+	public void setComplete(boolean isComplete) throws Exception {
 		this.isComplete = isComplete;
 		if (this.isComplete) {
 			this.requestStatus = "Submitted";
@@ -754,6 +765,13 @@ public class ServiceRequest {
 			DateFormat d = new SimpleDateFormat(pattern);
 			Date currentDate = Calendar.getInstance().getTime();
 			this.submitDate = d.format(currentDate);
+			
+			if (this.isEmployee) {
+				Agreements.sendEmployeeAgreement(this.employeeEmailAddress);
+			}
+			else {
+				Agreements.sendContractorAgreement(this.companyEmailAddress);
+			}
 		}
 	}
 
