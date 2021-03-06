@@ -69,12 +69,13 @@ public class ServiceRequestsController {
 
 	@PutMapping("/{requestNumber}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) {
+	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) throws Exception {
 
 		ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 
 		originalServiceRequest.setCreateDate(s.getCreateDate());
 		originalServiceRequest.setSubmitDate(s.getSubmitDate());
+		originalServiceRequest.setEmployee(s.isEmployee());
 		originalServiceRequest.setComplete(s.isComplete());
 		originalServiceRequest.setRequestStatus(s.getRequestStatus());
 		originalServiceRequest.setRegistrationType(s.getRegistrationType());
@@ -161,7 +162,7 @@ public class ServiceRequestsController {
 
 	@PatchMapping("/{requestNumber}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody Map<String, Object> patch) {
+	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody Map<String, Object> patch) throws Exception {
 
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 
@@ -176,6 +177,9 @@ public class ServiceRequestsController {
 				break;
 			case "registrationType":
 				s.setRegistrationType((String) patch.get(key));
+				break;
+			case "isEmployee":
+				s.setEmployee((boolean) patch.get(key));
 				break;
 			case "isComplete":
 				s.setComplete((boolean) patch.get(key));
