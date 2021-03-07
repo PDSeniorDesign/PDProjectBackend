@@ -1,12 +1,11 @@
 package sbrest.controller;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,21 +27,20 @@ import sbrest.service.ServiceRequestService;
 @RestController
 @RequestMapping("/service_requests")
 public class ServiceRequestsController {
-
+//These functions are for the average user
+	
 	@Autowired
 	private ServiceRequestDao serviceRequestDao;
 
 	@Autowired
 	private ServiceRequestService serviceRequestService;
 
-	@GetMapping
-	public List<ServiceRequest> serviceRequests(ModelMap models) {
-		return serviceRequestDao.getServiceRequests();
-	}
-
+	//Gets all details of a specified Service Request
 	@GetMapping("/{requestNumber}")
 	public ServiceRequest get(@PathVariable Integer requestNumber) {
+		
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
+
 		if (s == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service Request not found");
 		return s;
@@ -68,8 +66,13 @@ public class ServiceRequestsController {
 	}
 
 	@PutMapping("/{requestNumber}")
+<<<<<<< HEAD
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) throws Exception {
+=======
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) {
+>>>>>>> main
 
 		ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 
@@ -156,7 +159,6 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSocialNetworkingLinkedIn(s.isSocialNetworkingLinkedIn());
 
 		originalServiceRequest = serviceRequestDao.saveServiceRequest(originalServiceRequest);
-		return originalServiceRequest;
 
 	}
 
@@ -183,7 +185,6 @@ public class ServiceRequestsController {
 				break;
 			case "isComplete":
 				s.setComplete((boolean) patch.get(key));
-				break;
 				// A.V.
 			case "requestType":
 				s.setRequestType((String) patch.get(key));
@@ -413,15 +414,12 @@ public class ServiceRequestsController {
 			case "socialNetworkingLinkedIn":
 				s.setSocialNetworkingLinkedIn((boolean) patch.get(key));
 				break;
-			default:
-				break;
 
 			}
 
 		}
 
 		s = serviceRequestDao.saveServiceRequest(s);
-		return s;
 	}
 
 	@DeleteMapping("/{requestNumber}")

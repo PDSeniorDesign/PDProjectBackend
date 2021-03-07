@@ -110,7 +110,6 @@ public class ServiceRequest {
 		DateFormat d = new SimpleDateFormat(pattern);
 		Date currentDate = Calendar.getInstance().getTime();
 		this.createDate = d.format(currentDate);
-		this.requestStatus = "Draft";
 	}
 
 	public String getCreateDate() {
@@ -773,6 +772,7 @@ public class ServiceRequest {
 				Agreements.sendContractorAgreement(this.companyEmailAddress);
 			}
 		}
+
 	}
 
 	public Integer getRequestNumber() {
