@@ -54,7 +54,6 @@ Your backend is now running! Feel free to test the service_requests endpoint by 
    "firstName":"John",
    "middleInitial":"F",
    "employeeNumber":"15",
-   "hostedId":"265",
    "departmentName":"Example Department",
    "departmentNumber":"512",
    "companyName":"Jim's Burgers",
