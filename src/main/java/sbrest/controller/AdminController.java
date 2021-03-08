@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +34,8 @@ public class AdminController {
 	private ServiceRequestDao serviceRequestDao;
 	
 	//Gets some details of all specified Service Request if user is admin
-	@GetMapping("/{password}/service_requests")
-	public List<RequestStatusResponse> getRequestStatusByRequestNumber(@PathVariable String password) {
+	@GetMapping("/service_requests")
+	public List<RequestStatusResponse> getRequestStatusByRequestNumber(@RequestHeader("password") String password) {		
 		List<ServiceRequest> serviceRequests = serviceRequestDao.getServiceRequests();
 		
 		List<RequestStatusResponse> requestStatusResponses = new ArrayList<RequestStatusResponse>();
@@ -63,8 +62,8 @@ public class AdminController {
 	}	
 	
 	//Gets all details of a specified Service Request if user is admin
-	@GetMapping("/{password}/service_requests/{requestNumber}")
-	public ServiceRequest get(@PathVariable String password, @PathVariable Integer requestNumber) {
+	@GetMapping("/service_requests/{requestNumber}")
+	public ServiceRequest get(@RequestHeader("password") String password, @PathVariable Integer requestNumber) {
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 
 		// get password from user input and database, then compare
@@ -82,13 +81,12 @@ public class AdminController {
 	}
 	
 	//Admin user can change the password
-	@PatchMapping("/reset_password/{newPassword}")
-	//@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@RequestBody Admin oldAdmin, @PathVariable String newPassword) {
+	@PatchMapping("/reset_password")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void update(@RequestHeader("password") String oldPassword, @RequestHeader("new-password") String newPassword) {
 		
-		// get password from user input and database, then compare
+		// get password from database, then compare to user input
 		//If password matches one in database return request status, else 403 error forbidden
-		String oldPassword = oldAdmin.getPassword(); //user input
 		String dbPassword = adminDao.getAdmin().getPassword(); //database
 		
 		if (dbPassword.equals(oldPassword)) {
@@ -101,7 +99,6 @@ public class AdminController {
 		}
 	}
 	
-
 // NEEDED?
 //		@GetMapping
 //	    public List<Admin> Admin(ModelMap models) {
