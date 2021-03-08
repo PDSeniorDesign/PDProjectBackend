@@ -66,13 +66,8 @@ public class ServiceRequestsController {
 	}
 
 	@PutMapping("/{requestNumber}")
-<<<<<<< HEAD
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public ServiceRequest update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) throws Exception {
-=======
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable Integer requestNumber, @RequestBody ServiceRequest s) {
->>>>>>> main
 
 		ServiceRequest originalServiceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 
@@ -159,6 +154,7 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSocialNetworkingLinkedIn(s.isSocialNetworkingLinkedIn());
 
 		originalServiceRequest = serviceRequestDao.saveServiceRequest(originalServiceRequest);
+		return originalServiceRequest;
 
 	}
 
@@ -420,6 +416,7 @@ public class ServiceRequestsController {
 		}
 
 		s = serviceRequestDao.saveServiceRequest(s);
+		return s;
 	}
 
 	@DeleteMapping("/{requestNumber}")
