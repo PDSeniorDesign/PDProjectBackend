@@ -39,7 +39,6 @@ public class ServiceRequest {
 	private String firstName;
 	private String middleInitial;
 	private String employeeNumber;
-	private String hostedId;
 	private String departmentName;
 	private String departmentNumber;
 	private String companyName;
@@ -118,7 +117,6 @@ public class ServiceRequest {
 		this.firstName = "";
 		this.middleInitial = "";
 		this.employeeNumber = "";
-		this.hostedId = "";
 		this.departmentName = "";
 		this.departmentNumber = "";
 		this.companyName = "";
@@ -278,14 +276,6 @@ public class ServiceRequest {
 
 	public void setEmployeeNumber(String employeeNumber) {
 		this.employeeNumber = employeeNumber;
-	}
-
-	public String getHostedId() {
-		return hostedId;
-	}
-
-	public void setHostedId(String hostedId) {
-		this.hostedId = hostedId;
 	}
 
 	public String getDepartmentName() {

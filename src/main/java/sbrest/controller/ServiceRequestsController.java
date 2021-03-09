@@ -89,7 +89,6 @@ public class ServiceRequestsController {
 		originalServiceRequest.setFirstName(s.getFirstName());
 		originalServiceRequest.setMiddleInitial(s.getMiddleInitial());
 		originalServiceRequest.setEmployeeNumber(s.getEmployeeNumber());
-		originalServiceRequest.setHostedId(s.getHostedId());
 		originalServiceRequest.setDepartmentName(s.getDepartmentName());
 		originalServiceRequest.setDepartmentNumber(s.getDepartmentNumber());
 		originalServiceRequest.setCompanyName(s.getCompanyName());
@@ -218,9 +217,6 @@ public class ServiceRequestsController {
 				break;
 			case "employeeNumber":
 				s.setEmployeeNumber((String) patch.get(key));
-				break;
-			case "hostedId":
-				s.setHostedId((String) patch.get(key));
 				break;
 			case "departmentName":
 				s.setDepartmentName((String) patch.get(key));
