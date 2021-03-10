@@ -78,8 +78,13 @@ public class ServiceRequestsController {
 		originalServiceRequest.setEmployee(s.isEmployee());
 		originalServiceRequest.setComplete(s.isComplete());
 		originalServiceRequest.setRequestStatus(s.getRequestStatus());
-		originalServiceRequest.setRegistrationType(s.getRegistrationType());
-		originalServiceRequest.setRequestType(s.getRequestType());
+		originalServiceRequest.setNewRegistration(s.isNewRegistration());
+		originalServiceRequest.setDeletePriorRegistration(s.isDeletePriorRegistration());
+		originalServiceRequest.setUpdatePriorRegistration(s.isUpdatePriorRegistration());
+		originalServiceRequest.setReplaceLostToken(s.isReplaceLostToken());
+		originalServiceRequest.setAddLogonId(s.isAddLogonId());
+		originalServiceRequest.setChangeLogonId(s.isChangeLogonId());
+		originalServiceRequest.setDeleteLogonId(s.isDeleteLogonId());
 		originalServiceRequest.setLastName(s.getLastName());
 		originalServiceRequest.setFirstName(s.getFirstName());
 		originalServiceRequest.setMiddleInitial(s.getMiddleInitial());
@@ -89,7 +94,6 @@ public class ServiceRequestsController {
 		originalServiceRequest.setDepartmentNumber(s.getDepartmentNumber());
 		originalServiceRequest.setCompanyName(s.getCompanyName());
 		originalServiceRequest.setCompanyEmailAddress(s.getCompanyEmailAddress());
-		originalServiceRequest.setDepartmentEmailAddress(s.getDepartmentEmailAddress());
 		originalServiceRequest.setCountyEmailAddress(s.getCountyEmailAddress());
 		originalServiceRequest.setEmployeeEmailAddress(s.getEmployeeEmailAddress());
 		originalServiceRequest.setBusinessStreetAddress(s.getBusinessStreetAddress());
@@ -104,11 +108,8 @@ public class ServiceRequestsController {
 		originalServiceRequest.setCompanyZip(s.getCompanyZip());
 		originalServiceRequest.setCompanyPhoneNumber(s.getCompanyPhoneNumber());
 		originalServiceRequest.setCountyPhoneNumber(s.getCountyPhoneNumber());
-		originalServiceRequest.setWorkPhoneNumber(s.getWorkPhoneNumber());
 		originalServiceRequest.setContractWorkOrderNumber(s.getContractWorkOrderNumber());
 		originalServiceRequest.setContractExpirationDate(s.getContractExpirationDate());
-		originalServiceRequest.setCustomerSignature(s.getCustomerSignature());
-		originalServiceRequest.setCustomerSignatureDate(s.getCustomerSignatureDate());
 		originalServiceRequest.setIbmLogOnId(s.getIbmLogOnId());
 		originalServiceRequest.setMajorGroupCode(s.getMajorGroupCode());
 		originalServiceRequest.setLsoGroupCode(s.getLsoGroupCode());
@@ -123,16 +124,16 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSystemApplication(s.getSystemApplication());
 		originalServiceRequest.setGroupName(s.getGroupName());
 		originalServiceRequest.setOldGroup(s.getOldGroup());
-		originalServiceRequest.setApsAo(s.getApsAo());
-		originalServiceRequest.setDmvSystemCode(s.getDmvSystemCode());
-		originalServiceRequest.setJaiSystemLocation(s.getJaiSystemLocation());
-		originalServiceRequest.setUnixRequestType(s.getUnixRequestType());
+		originalServiceRequest.setUnixAddLogonId(s.isUnixAddLogonId());
+		originalServiceRequest.setUnixChangeLogonId(s.isUnixChangeLogonId());
+		originalServiceRequest.setUnixDeleteLogonId(s.isUnixDeleteLogonId());
 		originalServiceRequest.setUnixLogOnId(s.getUnixLogOnId());
 		originalServiceRequest.setUnixApplication(s.getUnixApplication());
 		originalServiceRequest.setUnixAccessGroup(s.getUnixAccessGroup());
 		originalServiceRequest.setUnixAccountNumber(s.getUnixAccountNumber());
 		originalServiceRequest.setBillingAccountNumber(s.getBillingAccountNumber());
-		originalServiceRequest.setAccessType(s.getAccessType());
+		originalServiceRequest.setSecurIdVpn(s.isSecurIdVpn());
+		originalServiceRequest.setAdaptiveAuthenticationVpn(s.isAdaptiveAuthenticationVpn());
 		originalServiceRequest.setInternetApplication(s.isInternetApplication());
 		originalServiceRequest.setExchangeEmail(s.isExchangeEmail());
 		originalServiceRequest.setEmailEncryption(s.isEmailEncryption());
@@ -175,8 +176,14 @@ public class ServiceRequestsController {
 			case "submitDate":
 				s.setSubmitDate((String) patch.get(key));
 				break;
-			case "registrationType":
-				s.setRegistrationType((String) patch.get(key));
+			case "newRegistration":
+				s.setNewRegistration((boolean) patch.get(key));
+				break;
+			case "deletePriorRegistration":
+				s.setDeletePriorRegistration((boolean) patch.get(key));
+				break;
+			case "updatePriorRegistration":
+				s.setUpdatePriorRegistration((boolean) patch.get(key));
 				break;
 			case "isEmployee":
 				s.setEmployee((boolean) patch.get(key));
@@ -185,8 +192,17 @@ public class ServiceRequestsController {
 				s.setComplete((boolean) patch.get(key));
 				break;
 				// A.V.
-			case "requestType":
-				s.setRequestType((String) patch.get(key));
+			case "replaceLostToken":
+				s.setReplaceLostToken((boolean) patch.get(key));
+				break;
+			case "addLogonId":
+				s.setAddLogonId((boolean) patch.get(key));
+				break;
+			case "changeLogonId":
+				s.setChangeLogonId((boolean) patch.get(key));
+				break;
+			case "deleteLogonId":
+				s.setDeleteLogonId((boolean) patch.get(key));
 				break;
 			case "requestStatus":
 				s.setRequestStatus((String) patch.get(key));
@@ -201,25 +217,22 @@ public class ServiceRequestsController {
 				s.setMiddleInitial((String) patch.get(key));
 				break;
 			case "employeeNumber":
-				s.setEmployeeNumber((Integer) patch.get(key));
+				s.setEmployeeNumber((String) patch.get(key));
 				break;
 			case "hostedId":
-				s.setHostedId((Integer) patch.get(key));
+				s.setHostedId((String) patch.get(key));
 				break;
 			case "departmentName":
 				s.setDepartmentName((String) patch.get(key));
 				break;
 			case "departmentNumber":
-				s.setDepartmentNumber((Integer) patch.get(key));
+				s.setDepartmentNumber((String) patch.get(key));
 				break;
 			case "companyName":
 				s.setCompanyName((String) patch.get(key));
 				break;
 			case "companyEmailAddress":
 				s.setCompanyEmailAddress((String) patch.get(key));
-				break;
-			case "departmentEmailAddress":
-				s.setDepartmentEmailAddress((String) patch.get(key));
 				break;
 			case "countyEmailAddress":
 				s.setCountyEmailAddress((String) patch.get(key));
@@ -263,29 +276,20 @@ public class ServiceRequestsController {
 			case "countyPhoneNumber":
 				s.setCountyPhoneNumber((String) patch.get(key));
 				break;
-			case "workPhoneNumber":
-				s.setWorkPhoneNumber((String) patch.get(key));
-				break;
 			case "contractWorkOrderNumber":
-				s.setContractWorkOrderNumber((Integer) patch.get(key));
+				s.setContractWorkOrderNumber((String) patch.get(key));
 				break;
 			case "contractExpirationDate":
 				s.setContractExpirationDate((String) patch.get(key));
 				break;
-			case "customerSignature":
-				s.setCustomerSignature((String) patch.get(key));
-				break;
-			case "customerSignatureDate":
-				s.setCustomerSignatureDate((String) patch.get(key));
-				break;
 			case "ibmLogOnId":
-				s.setIbmLogOnId((Integer) patch.get(key));
+				s.setIbmLogOnId((String) patch.get(key));
 				break;
 			case "majorGroupCode":
-				s.setMajorGroupCode((Integer) patch.get(key));
+				s.setMajorGroupCode((String) patch.get(key));
 				break;
 			case "lsoGroupCode":
-				s.setLsoGroupCode((Integer) patch.get(key));
+				s.setLsoGroupCode((String) patch.get(key));
 				break;
 			case "securityAuthorization":
 				s.setSecurityAuthorization((String) patch.get(key));
@@ -294,10 +298,10 @@ public class ServiceRequestsController {
 				s.setTsoAccess((boolean) patch.get(key));
 				break;
 			case "tsoGroupCode":
-				s.setTsoGroupCode((Integer) patch.get(key));
+				s.setTsoGroupCode((String) patch.get(key));
 				break;
 			case "binNumber":
-				s.setBinNumber((Integer) patch.get(key));
+				s.setBinNumber((String) patch.get(key));
 				break;
 			case "subGroup1":
 				s.setSubGroup1((String) patch.get(key));
@@ -320,20 +324,17 @@ public class ServiceRequestsController {
 			case "oldGroup":
 				s.setOldGroup((String) patch.get(key));
 				break;
-			case "apsAo":
-				s.setApsAo((String) patch.get(key));
+			case "unixAddLogonId":
+				s.setUnixAddLogonId((boolean) patch.get(key));
 				break;
-			case "dmvSystemCode":
-				s.setDmvSystemCode((String) patch.get(key));
+			case "unixChangeLogonId":
+				s.setUnixChangeLogonId((boolean) patch.get(key));
 				break;
-			case "jaiSystemLocation":
-				s.setJaiSystemLocation((String) patch.get(key));
-				break;
-			case "unixRequestType":
-				s.setUnixRequestType((String) patch.get(key));
+			case "unixDeleteLogonId":
+				s.setUnixDeleteLogonId((boolean) patch.get(key));
 				break;
 			case "unixLogOnId":
-				s.setUnixLogOnId((Integer) patch.get(key));
+				s.setUnixLogOnId((String) patch.get(key));
 				break;
 			case "unixApplication":
 				s.setUnixApplication((String) patch.get(key));
@@ -342,13 +343,16 @@ public class ServiceRequestsController {
 				s.setUnixAccessGroup((String) patch.get(key));
 				break;
 			case "unixAccountNumber":
-				s.setUnixAccountNumber((Integer) patch.get(key));
+				s.setUnixAccountNumber((String) patch.get(key));
 				break;
 			case "billingAccountNumber":
-				s.setBillingAccountNumber((Integer) patch.get(key));
+				s.setBillingAccountNumber((String) patch.get(key));
 				break;
-			case "accessType":
-				s.setAccessType((String) patch.get(key));
+			case "securIdVpn":
+				s.setSecurIdVpn((boolean) patch.get(key));
+				break;
+			case "adaptiveAuthenticationVpn":
+				s.setAdaptiveAuthenticationVpn((boolean) patch.get(key));
 				break;
 			case "internetApplication":
 				s.setInternetApplication((boolean) patch.get(key));
