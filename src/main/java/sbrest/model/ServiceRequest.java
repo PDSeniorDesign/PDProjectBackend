@@ -28,18 +28,22 @@ public class ServiceRequest {
 	private boolean isEmployee;
 	private String requestStatus;
 	private boolean isComplete;
-	private String registrationType;
-	private String requestType;
+	private boolean newRegistration;
+	private boolean deletePriorRegistration;
+	private boolean updatePriorRegistration;
+	private boolean replaceLostToken;
+	private boolean addLogonId;
+	private boolean changeLogonId;
+	private boolean deleteLogonId;
 	private String lastName;
 	private String firstName;
 	private String middleInitial;
-	private Integer employeeNumber;
-	private Integer hostedId;
+	private String employeeNumber;
+	private String hostedId;
 	private String departmentName;
-	private Integer departmentNumber;
+	private String departmentNumber;
 	private String companyName;
 	private String companyEmailAddress;
-	private String departmentEmailAddress;
 	private String countyEmailAddress;
 	private String employeeEmailAddress;
 	private String businessStreetAddress;
@@ -54,18 +58,15 @@ public class ServiceRequest {
 	private String companyZip;
 	private String companyPhoneNumber;
 	private String countyPhoneNumber;
-	private String workPhoneNumber;
-	private Integer contractWorkOrderNumber;
+	private String contractWorkOrderNumber;
 	private String contractExpirationDate;
-	private String customerSignature;
-	private String customerSignatureDate;
-	private Integer ibmLogOnId;
-	private Integer majorGroupCode;
-	private Integer lsoGroupCode;
+	private String ibmLogOnId;
+	private String majorGroupCode;
+	private String lsoGroupCode;
 	private String securityAuthorization;
 	private boolean tsoAccess;
-	private Integer tsoGroupCode;
-	private Integer binNumber;
+	private String tsoGroupCode;
+	private String binNumber;
 	private String subGroup1;
 	private String subGroup2;
 	private String subGroup3;
@@ -73,16 +74,16 @@ public class ServiceRequest {
 	private String systemApplication;
 	private String groupName;
 	private String oldGroup;
-	private String apsAo;
-	private String dmvSystemCode;
-	private String jaiSystemLocation;
-	private String unixRequestType;
-	private Integer unixLogOnId;
+	private boolean unixAddLogonId;
+	private boolean unixChangeLogonId;
+	private boolean unixDeleteLogonId;
+	private String unixLogOnId;
 	private String unixApplication;
 	private String unixAccessGroup;
-	private Integer unixAccountNumber;
-	private Integer billingAccountNumber;
-	private String accessType;
+	private String unixAccountNumber;
+	private String billingAccountNumber;
+	private boolean securIdVpn;
+	private boolean adaptiveAuthenticationVpn;
 	private boolean internetApplication;
 	private boolean exchangeEmail;
 	private boolean emailEncryption;
@@ -93,6 +94,7 @@ public class ServiceRequest {
 	private boolean windowsRightsMgmt;
 	private boolean gmailAccess;
 	private boolean yahooMailAccess;
+	private boolean otherEmailAccess;
 	private String otherEmailDomain;
 	private String businessJustification;
 	private boolean defaultCountyWidePolicy;
@@ -106,10 +108,57 @@ public class ServiceRequest {
 	private boolean socialNetworkingLinkedIn;
 
 	public ServiceRequest() {
-		String pattern = "MM/dd/yyyy HH:mm:ss";
+		String pattern = "MM/dd/yyyy";
 		DateFormat d = new SimpleDateFormat(pattern);
 		Date currentDate = Calendar.getInstance().getTime();
 		this.createDate = d.format(currentDate);
+
+		this.requestStatus = "Draft";
+		
+		this.lastName = "";
+		this.firstName = "";
+		this.middleInitial = "";
+		this.employeeNumber = "";
+		this.hostedId = "";
+		this.departmentName = "";
+		this.departmentNumber = "";
+		this.companyName = "";
+		this.companyEmailAddress = "";
+		this.countyEmailAddress = "";
+		this.employeeEmailAddress = "";
+		this.businessStreetAddress = "";
+		this.businessCity = "";
+		this.businessState = "";
+		this.businessZip = "";
+		this.businessPhoneNumber = "";
+		this.workMailingAddress = "";
+		this.companyStreetAddress = "";
+		this.companyCity = "";
+		this.companyState = "";
+		this.companyZip = "";
+		this.companyPhoneNumber = "";
+		this.countyPhoneNumber = "";
+		this.contractWorkOrderNumber = "";
+		this.contractExpirationDate = "";
+		this.ibmLogOnId = "";
+		this.majorGroupCode = "";
+		this.lsoGroupCode = "";
+		this.securityAuthorization = "";
+		this.tsoGroupCode = "";
+		this.binNumber = "";
+		this.subGroup1 = "";
+		this.subGroup2 = "";
+		this.subGroup3 = "";
+		this.systemApplication = "";
+		this.groupName = "";
+		this.oldGroup = "";
+		this.unixLogOnId = "";
+		this.unixApplication = "";
+		this.unixAccessGroup = "";
+		this.unixAccountNumber = "";
+		this.billingAccountNumber = "";
+		this.otherEmailDomain = "";
+		this.businessJustification = "";
 	}
 
 	public String getCreateDate() {
@@ -144,20 +193,60 @@ public class ServiceRequest {
 		this.requestStatus = requestStatus;
 	}
 
-	public String getRegistrationType() {
-		return registrationType;
+	public boolean isNewRegistration() {
+		return newRegistration;
 	}
 
-	public void setRegistrationType(String registrationType) {
-		this.registrationType = registrationType;
+	public void setNewRegistration(boolean newRegistration) {
+		this.newRegistration = newRegistration;
 	}
 
-	public String getRequestType() {
-		return requestType;
+	public boolean isDeletePriorRegistration() {
+		return deletePriorRegistration;
 	}
 
-	public void setRequestType(String requestType) {
-		this.requestType = requestType;
+	public void setDeletePriorRegistration(boolean deletePriorRegistration) {
+		this.deletePriorRegistration = deletePriorRegistration;
+	}
+
+	public boolean isUpdatePriorRegistration() {
+		return updatePriorRegistration;
+	}
+
+	public void setUpdatePriorRegistration(boolean updatePriorRegistration) {
+		this.updatePriorRegistration = updatePriorRegistration;
+	}
+
+	public boolean isReplaceLostToken() {
+		return replaceLostToken;
+	}
+
+	public void setReplaceLostToken(boolean replaceLostToken) {
+		this.replaceLostToken = replaceLostToken;
+	}
+
+	public boolean isAddLogonId() {
+		return addLogonId;
+	}
+
+	public void setAddLogonId(boolean addLogonId) {
+		this.addLogonId = addLogonId;
+	}
+
+	public boolean isChangeLogonId() {
+		return changeLogonId;
+	}
+
+	public void setChangeLogonId(boolean changeLogonId) {
+		this.changeLogonId = changeLogonId;
+	}
+
+	public boolean isDeleteLogonId() {
+		return deleteLogonId;
+	}
+
+	public void setDeleteLogonId(boolean deleteLogonId) {
+		this.deleteLogonId = deleteLogonId;
 	}
 
 	public String getLastName() {
@@ -184,19 +273,19 @@ public class ServiceRequest {
 		this.middleInitial = middleInitial;
 	}
 
-	public Integer getEmployeeNumber() {
+	public String getEmployeeNumber() {
 		return employeeNumber;
 	}
 
-	public void setEmployeeNumber(Integer employeeNumber) {
+	public void setEmployeeNumber(String employeeNumber) {
 		this.employeeNumber = employeeNumber;
 	}
 
-	public Integer getHostedId() {
+	public String getHostedId() {
 		return hostedId;
 	}
 
-	public void setHostedId(Integer hostedId) {
+	public void setHostedId(String hostedId) {
 		this.hostedId = hostedId;
 	}
 
@@ -208,11 +297,11 @@ public class ServiceRequest {
 		this.departmentName = departmentName;
 	}
 
-	public Integer getDepartmentNumber() {
+	public String getDepartmentNumber() {
 		return departmentNumber;
 	}
 
-	public void setDepartmentNumber(Integer departmentNumber) {
+	public void setDepartmentNumber(String departmentNumber) {
 		this.departmentNumber = departmentNumber;
 	}
 
@@ -230,14 +319,6 @@ public class ServiceRequest {
 
 	public void setCompanyEmailAddress(String companyEmailAddress) {
 		this.companyEmailAddress = companyEmailAddress;
-	}
-
-	public String getDepartmentEmailAddress() {
-		return departmentEmailAddress;
-	}
-
-	public void setDepartmentEmailAddress(String departmentEmailAddress) {
-		this.departmentEmailAddress = departmentEmailAddress;
 	}
 
 	public String getCountyEmailAddress() {
@@ -352,19 +433,11 @@ public class ServiceRequest {
 		this.countyPhoneNumber = countyPhoneNumber;
 	}
 
-	public String getWorkPhoneNumber() {
-		return workPhoneNumber;
-	}
-
-	public void setWorkPhoneNumber(String workPhoneNumber) {
-		this.workPhoneNumber = workPhoneNumber;
-	}
-
-	public Integer getContractWorkOrderNumber() {
+	public String getContractWorkOrderNumber() {
 		return contractWorkOrderNumber;
 	}
 
-	public void setContractWorkOrderNumber(Integer contractWorkOrderNumber) {
+	public void setContractWorkOrderNumber(String contractWorkOrderNumber) {
 		this.contractWorkOrderNumber = contractWorkOrderNumber;
 	}
 
@@ -376,43 +449,27 @@ public class ServiceRequest {
 		this.contractExpirationDate = contractExpirationDate;
 	}
 
-	public String getCustomerSignature() {
-		return customerSignature;
-	}
-
-	public void setCustomerSignature(String customerSignature) {
-		this.customerSignature = customerSignature;
-	}
-
-	public String getCustomerSignatureDate() {
-		return customerSignatureDate;
-	}
-
-	public void setCustomerSignatureDate(String customerSignatureDate) {
-		this.customerSignatureDate = customerSignatureDate;
-	}
-
-	public Integer getIbmLogOnId() {
+	public String getIbmLogOnId() {
 		return ibmLogOnId;
 	}
 
-	public void setIbmLogOnId(Integer ibmLogOnId) {
+	public void setIbmLogOnId(String ibmLogOnId) {
 		this.ibmLogOnId = ibmLogOnId;
 	}
 
-	public Integer getMajorGroupCode() {
+	public String getMajorGroupCode() {
 		return majorGroupCode;
 	}
 
-	public void setMajorGroupCode(Integer majorGroupCode) {
+	public void setMajorGroupCode(String majorGroupCode) {
 		this.majorGroupCode = majorGroupCode;
 	}
 
-	public Integer getLsoGroupCode() {
+	public String getLsoGroupCode() {
 		return lsoGroupCode;
 	}
 
-	public void setLsoGroupCode(Integer lsoGroupCode) {
+	public void setLsoGroupCode(String lsoGroupCode) {
 		this.lsoGroupCode = lsoGroupCode;
 	}
 
@@ -432,19 +489,19 @@ public class ServiceRequest {
 		this.tsoAccess = tsoAccess;
 	}
 
-	public Integer getTsoGroupCode() {
+	public String getTsoGroupCode() {
 		return tsoGroupCode;
 	}
 
-	public void setTsoGroupCode(Integer tsoGroupCode) {
+	public void setTsoGroupCode(String tsoGroupCode) {
 		this.tsoGroupCode = tsoGroupCode;
 	}
 
-	public Integer getBinNumber() {
+	public String getBinNumber() {
 		return binNumber;
 	}
 
-	public void setBinNumber(Integer binNumber) {
+	public void setBinNumber(String binNumber) {
 		this.binNumber = binNumber;
 	}
 
@@ -504,43 +561,35 @@ public class ServiceRequest {
 		this.oldGroup = oldGroup;
 	}
 
-	public String getApsAo() {
-		return apsAo;
+	public boolean isUnixAddLogonId() {
+		return unixAddLogonId;
 	}
 
-	public void setApsAo(String apsAo) {
-		this.apsAo = apsAo;
+	public void setUnixAddLogonId(boolean unixAddLogonId) {
+		this.unixAddLogonId = unixAddLogonId;
 	}
 
-	public String getDmvSystemCode() {
-		return dmvSystemCode;
+	public boolean isUnixChangeLogonId() {
+		return unixChangeLogonId;
 	}
 
-	public void setDmvSystemCode(String dmvSystemCode) {
-		this.dmvSystemCode = dmvSystemCode;
+	public void setUnixChangeLogonId(boolean unixChangeLogonId) {
+		this.unixChangeLogonId = unixChangeLogonId;
 	}
 
-	public String getJaiSystemLocation() {
-		return jaiSystemLocation;
+	public boolean isUnixDeleteLogonId() {
+		return unixDeleteLogonId;
 	}
 
-	public void setJaiSystemLocation(String jaiSystemLocation) {
-		this.jaiSystemLocation = jaiSystemLocation;
+	public void setUnixDeleteLogonId(boolean unixDeleteLogonId) {
+		this.unixDeleteLogonId = unixDeleteLogonId;
 	}
 
-	public String getUnixRequestType() {
-		return unixRequestType;
-	}
-
-	public void setUnixRequestType(String unixRequestType) {
-		this.unixRequestType = unixRequestType;
-	}
-
-	public Integer getUnixLogOnId() {
+	public String getUnixLogOnId() {
 		return unixLogOnId;
 	}
 
-	public void setUnixLogOnId(Integer unixLogOnId) {
+	public void setUnixLogOnId(String unixLogOnId) {
 		this.unixLogOnId = unixLogOnId;
 	}
 
@@ -560,28 +609,36 @@ public class ServiceRequest {
 		this.unixAccessGroup = unixAccessGroup;
 	}
 
-	public Integer getUnixAccountNumber() {
+	public String getUnixAccountNumber() {
 		return unixAccountNumber;
 	}
 
-	public void setUnixAccountNumber(Integer unixAccountNumber) {
+	public void setUnixAccountNumber(String unixAccountNumber) {
 		this.unixAccountNumber = unixAccountNumber;
 	}
 
-	public Integer getBillingAccountNumber() {
+	public String getBillingAccountNumber() {
 		return billingAccountNumber;
 	}
 
-	public void setBillingAccountNumber(Integer billingAccountNumber) {
+	public void setBillingAccountNumber(String billingAccountNumber) {
 		this.billingAccountNumber = billingAccountNumber;
 	}
 
-	public String getAccessType() {
-		return accessType;
+	public boolean isSecurIdVpn() {
+		return securIdVpn;
 	}
 
-	public void setAccessType(String accessType) {
-		this.accessType = accessType;
+	public void setSecurIdVpn(boolean securIdVpn) {
+		this.securIdVpn = securIdVpn;
+	}
+
+	public boolean isAdaptiveAuthenticationVpn() {
+		return adaptiveAuthenticationVpn;
+	}
+
+	public void setAdaptiveAuthenticationVpn(boolean adaptiveAuthenticationVpn) {
+		this.adaptiveAuthenticationVpn = adaptiveAuthenticationVpn;
 	}
 
 	public boolean isInternetApplication() {
@@ -662,6 +719,14 @@ public class ServiceRequest {
 
 	public void setYahooMailAccess(boolean yahooMailAccess) {
 		this.yahooMailAccess = yahooMailAccess;
+	}
+
+	public boolean isOtherEmailAccess() {
+		return otherEmailAccess;
+	}
+
+	public void setOtherEmailAccess(boolean otherEmailAccess) {
+		this.otherEmailAccess = otherEmailAccess;
 	}
 
 	public String getOtherEmailDomain() {
@@ -760,19 +825,23 @@ public class ServiceRequest {
 		this.isComplete = isComplete;
 		if (this.isComplete) {
 			this.requestStatus = "Submitted";
-			String pattern = "MM/dd/yyyy HH:mm:ss";
+			String pattern = "MM/dd/yyyy";
 			DateFormat d = new SimpleDateFormat(pattern);
 			Date currentDate = Calendar.getInstance().getTime();
 			this.submitDate = d.format(currentDate);
 			
 			if (this.isEmployee) {
-				Agreements.sendEmployeeAgreement(this.employeeEmailAddress);
+				Agreements.sendEmployeeAgreement(this);
 			}
 			else {
-				Agreements.sendContractorAgreement(this.companyEmailAddress);
+				Agreements.sendContractorAgreement(this);
 			}
 		}
 
+		else {
+			this.requestStatus = "Draft";
+			this.submitDate = "";
+		}
 	}
 
 	public Integer getRequestNumber() {
