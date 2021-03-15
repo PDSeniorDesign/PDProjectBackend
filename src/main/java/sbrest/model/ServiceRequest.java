@@ -5,15 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import sbrest.signapi.Agreements;
 
 @Entity
 @Table(name = "service_requests")
@@ -28,6 +22,7 @@ public class ServiceRequest {
 	private boolean isEmployee;
 	private String requestStatus;
 	private boolean isComplete;
+	private String agreementId;
 	private boolean newRegistration;
 	private boolean deletePriorRegistration;
 	private boolean updatePriorRegistration;
@@ -113,6 +108,7 @@ public class ServiceRequest {
 		this.createDate = d.format(currentDate);
 		this.requestStatus = "Draft";
 		
+		this.agreementId = "";
 		this.lastName = "";
 		this.firstName = "";
 		this.middleInitial = "";
@@ -188,6 +184,14 @@ public class ServiceRequest {
 
 	public void setRequestStatus(String requestStatus) {
 		this.requestStatus = requestStatus;
+	}
+
+	public String getAgreementId() {
+		return agreementId;
+	}
+
+	public void setAgreementId(String agreementId) {
+		this.agreementId = agreementId;
 	}
 
 	public boolean isNewRegistration() {
@@ -812,24 +816,6 @@ public class ServiceRequest {
 
 	public void setComplete(boolean isComplete) throws Exception {
 		this.isComplete = isComplete;
-		if (this.isComplete) {
-			this.requestStatus = "Submitted";
-			String pattern = "MM/dd/yyyy";
-			DateFormat d = new SimpleDateFormat(pattern);
-			Date currentDate = Calendar.getInstance().getTime();
-			this.submitDate = d.format(currentDate);
-			
-			if (this.isEmployee) {
-				Agreements.sendEmployeeAgreement(this);
-			}
-			else {
-				Agreements.sendContractorAgreement(this);
-			}
-		}
-		else {
-			this.requestStatus = "Draft";
-			this.submitDate = "";
-		}
 	}
 
 	public Integer getRequestNumber() {
