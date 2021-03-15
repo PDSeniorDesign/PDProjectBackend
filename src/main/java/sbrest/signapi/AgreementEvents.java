@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 
 public class AgreementEvents {
 	public static void main(String[] args) throws Exception {
-		System.out.println(getAgreementEvents("CBJCHBCAABAADKQZ4_piMFepyxKpLfB3mUhavZzQFPZx"));
-		System.out.println(getMostRecentAgreementEvent("CBJCHBCAABAADKQZ4_piMFepyxKpLfB3mUhavZzQFPZx"));
+		System.out.println(getAgreementEvents("CBJCHBCAABAAGJqiTBPRJBydvCX5VKN_n3WFhNpRC1n5"));
+		System.out.println(getMostRecentAgreementEvent("CBJCHBCAABAAGJqiTBPRJBydvCX5VKN_n3WFhNpRC1n5"));
 	}
 	
 	public static JSONObject getAgreementEvents(String agreementId) throws Exception {
