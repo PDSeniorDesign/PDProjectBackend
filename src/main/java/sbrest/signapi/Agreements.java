@@ -273,7 +273,27 @@ public class Agreements {
 		}
 		
 		if (serviceRequest.isEmployee()) {
-			
+			output += "{ \"fieldName\": \"departmentNumber3\", \"defaultValue\": \"" + serviceRequest.getDepartmentNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"businessPhoneNumber1\", \"defaultValue\": \"" + serviceRequest.getBusinessPhoneNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"businessPhoneNumber2\", \"defaultValue\": \"" + serviceRequest.getBusinessPhoneNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"businessPhoneNumber3\", \"defaultValue\": \"" + serviceRequest.getBusinessPhoneNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"businessPhoneNumber4\", \"defaultValue\": \"" + serviceRequest.getBusinessPhoneNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"businessPhoneNumber5\", \"defaultValue\": \"" + serviceRequest.getBusinessPhoneNumber() + "\"}, ";
+			String hostedId = "E" + serviceRequest.getEmployeeNumber();
+			output += "{ \"fieldName\": \"hostedId1\", \"defaultValue\": \"" + hostedId + "\"}, ";
+			output += "{ \"fieldName\": \"hostedId2\", \"defaultValue\": \"" + hostedId + "\"}, ";
+			if (serviceRequest.isLaCountyGovAccess()) {
+				output += "{ \"fieldName\": \"laCountyGovAccess\", \"defaultValue\": \"Checked\"}, ";
+			}
+			output += "{ \"fieldName\": \"employeeNumber1\", \"defaultValue\": \"" + serviceRequest.getEmployeeNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"employeeNumber2\", \"defaultValue\": \"" + serviceRequest.getEmployeeNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"employeeNumber3\", \"defaultValue\": \"" + serviceRequest.getEmployeeNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"employeeNumber4\", \"defaultValue\": \"" + serviceRequest.getEmployeeNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"employeeEmailAddress1\", \"defaultValue\": \"" + serviceRequest.getEmployeeEmailAddress() + "\"}, ";
+			output += "{ \"fieldName\": \"employeeEmailAddress2\", \"defaultValue\": \"" + serviceRequest.getEmployeeEmailAddress() + "\"}, ";
+			output += "{ \"fieldName\": \"employeeEmailAddress3\", \"defaultValue\": \"" + serviceRequest.getEmployeeEmailAddress() + "\"}, ";
+			output += "{ \"fieldName\": \"binNumber\", \"defaultValue\": \"" + serviceRequest.getBinNumber() + "\"}, ";
+			output += "{ \"fieldName\": \"securityAuthorization\", \"defaultValue\": \"" + serviceRequest.getSecurityAuthorization() + "\"}, ";
 		}
 		else {
 			output += "{ \"fieldName\": \"companyName1\", \"defaultValue\": \"" + serviceRequest.getCompanyName() + "\"}, ";
