@@ -1,5 +1,9 @@
 package sbrest.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -23,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sbrest.model.ServiceRequest;
 import sbrest.model.dao.ServiceRequestDao;
 import sbrest.service.ServiceRequestService;
+import sbrest.signapi.Agreements;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -50,7 +55,7 @@ public class ServiceRequestsController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ServiceRequest add(@RequestBody ServiceRequest s) {
+	public ServiceRequest add(@RequestBody ServiceRequest s) throws Exception {
 		// Generate a six digit code
 		Random rnd = new Random();
 		int randomRequestNumber = 100000 + rnd.nextInt(900000);
@@ -64,6 +69,7 @@ public class ServiceRequestsController {
 
 		// Set requestNumber
 		s.setRequestNumber(randomRequestNumber);
+		checkCompleteness(s);
 		return serviceRequestDao.saveServiceRequest(s);
 	}
 
@@ -155,6 +161,8 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSocialNetworkingTwitter(s.isSocialNetworkingTwitter());
 		originalServiceRequest.setSocialNetworkingLinkedIn(s.isSocialNetworkingLinkedIn());
 
+		checkCompleteness(originalServiceRequest);
+		
 		originalServiceRequest = serviceRequestDao.saveServiceRequest(originalServiceRequest);
 		return originalServiceRequest;
 
@@ -189,6 +197,7 @@ public class ServiceRequestsController {
 				break;
 			case "isComplete":
 				s.setComplete((boolean) patch.get(key));
+				checkCompleteness(s);
 				break;
 				// A.V.
 			case "replaceLostToken":
@@ -428,5 +437,26 @@ public class ServiceRequestsController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Integer requestNumber) {
 		serviceRequestDao.deleteServiceRequest(requestNumber);
+	}
+	
+	public void checkCompleteness(ServiceRequest s) throws Exception {
+		if (s.isComplete()) {
+			s.setRequestStatus("Submitted");
+			String pattern = "MM/dd/yyyy";
+			DateFormat d = new SimpleDateFormat(pattern);
+			Date currentDate = Calendar.getInstance().getTime();
+			s.setSubmitDate(d.format(currentDate));
+			
+			if (s.isEmployee()) {
+				s.setAgreementId(Agreements.sendEmployeeAgreement(s));
+			}
+			else {
+				s.setAgreementId(Agreements.sendContractorAgreement(s));
+			}
+		}
+		else {
+			s.setRequestStatus("Draft");
+			s.setSubmitDate("");
+		}
 	}
 }

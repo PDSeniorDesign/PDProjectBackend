@@ -9,7 +9,7 @@ import sbrest.model.ServiceRequest;
 public class Agreements {
 
 	@SuppressWarnings("unchecked")
-	public static void sendEmployeeAgreement(ServiceRequest serviceRequest) throws Exception {
+	public static String sendEmployeeAgreement(ServiceRequest serviceRequest) throws Exception {
 		// URL to invoke the agreements end point.
 		String accessToken = OAuthTokens.getOauthAccessToken();
 		String url = "https://api.na3.adobesign.com:443/api/rest/v6/agreements";
@@ -39,13 +39,15 @@ public class Agreements {
 				"        \"libraryDocumentId\": \"" + documentId + "\"\r\n" + 
 				"    }],\r\n" + 
 				"    \"name\": \"" + agreementName + "\",\r\n" + 
-				"    \"participantSetsInfo\": [{\r\n" + 
-				"        \"memberInfos\": [{\r\n" + 
-				"            \"email\": \"" + email + "\"\r\n" + 
-				"        }],\r\n" + 
-				"        \"order\": 1,\r\n" + 
-				"        \"role\": \"SIGNER\"\r\n" + 
-				"    }],\r\n" + 
+				"    \"participantSetsInfo\": [\r\n" + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 1, \"role\": \"SIGNER\"}, " +
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 2, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 3, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 4, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 5, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 6, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 7, \"role\": \"APPROVER\"}" + 
+				"	 ],\r\n" + 
 				"    \"signatureType\": \"ESIGN\",\r\n" + 
 				"    \"state\": \"IN_PROCESS\",\r\n" + 
 				"    \"mergeFieldInfo\": [\r\n";
@@ -57,11 +59,12 @@ public class Agreements {
 		responseJson = (JSONObject) OAuthTokens.makeApiCall(url, "POST", headers, requestJson.toString());
 		
 		String agreementId = responseJson.get("id").toString();
+		return agreementId;
 	
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void sendContractorAgreement(ServiceRequest serviceRequest) throws Exception {
+	public static String sendContractorAgreement(ServiceRequest serviceRequest) throws Exception {
 		// URL to invoke the agreements end point.
 		String accessToken = OAuthTokens.getOauthAccessToken();
 		String url = "https://api.na3.adobesign.com:443/api/rest/v6/agreements";
@@ -91,13 +94,16 @@ public class Agreements {
 				"        \"libraryDocumentId\": \"" + documentId + "\"\r\n" + 
 				"    }],\r\n" + 
 				"    \"name\": \"" + agreementName + "\",\r\n" + 
-				"    \"participantSetsInfo\": [{\r\n" + 
-				"        \"memberInfos\": [{\r\n" + 
-				"            \"email\": \"" + email + "\"\r\n" + 
-				"        }],\r\n" + 
-				"        \"order\": 1,\r\n" + 
-				"        \"role\": \"SIGNER\"\r\n" + 
-				"    }],\r\n" + 
+				"    \"participantSetsInfo\": [\r\n" + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 1, \"role\": \"SIGNER\"}, " +
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 2, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 3, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 4, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 5, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 6, \"role\": \"SIGNER\"}," + 
+				"       {\"memberInfos\": [{\"email\": \"" + email + "\"}], \"order\": 7, \"role\": \"APPROVER\"}" + 
+				
+				"	 ],\r\n" + 
 				"    \"signatureType\": \"ESIGN\",\r\n" + 
 				"    \"state\": \"IN_PROCESS\",\r\n" + 
 				"    \"mergeFieldInfo\": [\r\n";
@@ -109,6 +115,7 @@ public class Agreements {
 		responseJson = (JSONObject) OAuthTokens.makeApiCall(url, "POST", headers, requestJson.toString());
 		
 		String agreementId = responseJson.get("id").toString();
+		return agreementId;
 		
 	}
 	
@@ -328,5 +335,4 @@ public class Agreements {
 		
 		return output.substring(0, output.length()-2);
 	}
-
 }
