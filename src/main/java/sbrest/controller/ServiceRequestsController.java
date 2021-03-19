@@ -78,15 +78,6 @@ public class ServiceRequestsController {
 		// Set requestNumber
 		s.setRequestNumber(randomRequestNumber);
 		
-		// TODO: Send an email to admin
-		String adminEmail = adminDao.getAdmin().getEmail();
-		String subject = "New Request Submitted";
-		String text = "A new service request was submitted by " + s.getFirstName() + " " + s.getLastName()
-				+ ". You can review the request at " + "http://localhost:8080/admin/service_requests/"
-				+ s.getRequestNumber() + ".";
-
-		sendEmail.sendSimpleMessage(adminEmail, subject, text);
-		
 		checkCompleteness(s);
 		return serviceRequestDao.saveServiceRequest(s);
 	}
@@ -464,6 +455,15 @@ public class ServiceRequestsController {
 			DateFormat d = new SimpleDateFormat(pattern);
 			Date currentDate = Calendar.getInstance().getTime();
 			s.setSubmitDate(d.format(currentDate));
+			
+			// TODO: Send an email to admin
+			String adminEmail = adminDao.getAdmin().getEmail();
+			String subject = "New Request Submitted";
+			String text = "A new service request was submitted by " + s.getFirstName() + " " + s.getLastName()
+					+ ". You can review the request at " + "http://localhost:8080/admin/service_requests/"
+					+ s.getRequestNumber() + ".";
+
+			sendEmail.sendSimpleMessage(adminEmail, subject, text);
 			
 			if (s.isEmployee()) {
 				s.setAgreementId(Agreements.sendEmployeeAgreement(s));
