@@ -14,7 +14,10 @@ public class SendEmail {
 	public void sendSimpleMessage(String to, String subject, String text) {
 
 		SimpleMailMessage message = new SimpleMailMessage();
+		
 		message.setFrom("email@example.com"); //enter the sender email here
+		
+		// Email receiver: admin email stored in database
 		message.setTo(to);
 		message.setSubject(subject);
 		message.setText(text);
