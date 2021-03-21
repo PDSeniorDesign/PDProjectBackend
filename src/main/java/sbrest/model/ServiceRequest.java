@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -30,51 +31,93 @@ public class ServiceRequest {
 	private boolean addLogonId;
 	private boolean changeLogonId;
 	private boolean deleteLogonId;
+	
+	@Column(length = 50)
 	private String lastName;
+	@Column(length = 50)
 	private String firstName;
+	@Column(length = 5)
 	private String middleInitial;
+	@Column(length = 50)
 	private String employeeNumber;
+	@Column(length = 100)
 	private String departmentName;
+	@Column(length = 50)
 	private String departmentNumber;
+	@Column(length = 100)
 	private String companyName;
+	@Column(length = 100)
 	private String companyEmailAddress;
+	@Column(length = 100)
 	private String countyEmailAddress;
+	@Column(length = 100)
 	private String employeeEmailAddress;
+	@Column(length = 100)
 	private String businessStreetAddress;
+	@Column(length = 50)
 	private String businessCity;
+	@Column(length = 50)
 	private String businessState;
+	@Column(length = 20)
 	private String businessZip;
+	@Column(length = 20)
 	private String businessPhoneNumber;
+	@Column(length = 150)
 	private String workMailingAddress;
+	@Column(length = 100)
 	private String companyStreetAddress;
+	@Column(length = 50)
 	private String companyCity;
+	@Column(length = 50)
 	private String companyState;
+	@Column(length = 20)
 	private String companyZip;
+	@Column(length = 20)
 	private String companyPhoneNumber;
+	@Column(length = 20)
 	private String countyPhoneNumber;
+	@Column(length = 50)
 	private String contractWorkOrderNumber;
+	@Column(length = 20)
 	private String contractExpirationDate;
+	@Column(length = 50)
 	private String ibmLogOnId;
+	@Column(length = 150)
 	private String majorGroupCode;
+	@Column(length = 150)
 	private String lsoGroupCode;
+	@Column(length = 250)
 	private String securityAuthorization;
 	private boolean tsoAccess;
+	@Column(length = 150)
 	private String tsoGroupCode;
+	@Column(length = 50)
 	private String binNumber;
+	@Column(length = 150)
 	private String subGroup1;
+	@Column(length = 150)
 	private String subGroup2;
+	@Column(length = 150)
 	private String subGroup3;
 	private boolean onlineAccess;
+	@Column(length = 250)
 	private String systemApplication;
+	@Column(length = 150)
 	private String groupName;
+	@Column(length = 150)
 	private String oldGroup;
 	private boolean unixAddLogonId;
 	private boolean unixChangeLogonId;
 	private boolean unixDeleteLogonId;
+	@Column(length = 150)
 	private String unixLogOnId;
+	@Column(length = 150)
 	private String unixApplication;
+	@Column(length = 150)
 	private String unixAccessGroup;
+	@Column(length = 150)
 	private String unixAccountNumber;
+	@Column(length = 150)
 	private String billingAccountNumber;
 	private boolean securIdVpn;
 	private boolean adaptiveAuthenticationVpn;
@@ -89,7 +132,9 @@ public class ServiceRequest {
 	private boolean gmailAccess;
 	private boolean yahooMailAccess;
 	private boolean otherEmailAccess;
+	@Column(length = 100)
 	private String otherEmailDomain;
+	@Column(length = 250)
 	private String businessJustification;
 	private boolean defaultCountyWidePolicy;
 	private boolean departmentPolicyRule0;
@@ -100,6 +145,51 @@ public class ServiceRequest {
 	private boolean socialNetworkingFacebook;
 	private boolean socialNetworkingTwitter;
 	private boolean socialNetworkingLinkedIn;
+	
+	// Added boolean to determine if request is submitted. 
+	// Note: This differs from isComplete. User first submits request, then
+	// Admin will 'complete' request after review.
+	private boolean isSubmitted;
+	
+	// Added fields to store participant info.
+	@Column(length = 150)
+	private String managerName;
+	@Column(length = 150)
+	private String managerEmail;
+	@Column(length = 150)
+	private String managerTitle;
+	@Column(length = 20)
+	private String managerPhone;
+	
+	// Below fields are only PATCHable by admin
+	@Column(length = 150)
+	private String divChiefManagerName;
+	@Column(length = 150)
+	private String divChiefManagerEmail;
+	@Column(length = 20)
+	private String divChiefManagerPhone;
+	
+	@Column(length = 150)
+	private String departmentHeadName;
+	@Column(length = 150)
+	private String departmentHeadEmail;
+	@Column(length = 20)
+	private String departmentHeadPhone;
+	
+	@Column(length = 150)
+	private String deptInfoSecurityOfficerName;
+	@Column(length = 150)
+	private String deptInfoSecurityOfficerEmail;
+	@Column(length = 20)
+	private String deptInfoSecurityOfficerPhone;
+	
+	@Column(length = 150)
+	private String applicationCoordinatorName;
+	@Column(length = 150)
+	private String applicationCoordinatorEmail;
+	@Column(length = 20)
+	private String applicationCoordinatorPhone;
+	
 
 	public ServiceRequest() {
 		String pattern = "MM/dd/yyyy";
@@ -824,6 +914,142 @@ public class ServiceRequest {
 
 	public void setRequestNumber(Integer requestNumber) {
 		this.requestNumber = requestNumber;
+	}
+
+	public boolean isSubmitted() {
+		return isSubmitted;
+	}
+
+	public void setSubmitted(boolean isSubmitted) {
+		this.isSubmitted = isSubmitted;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
+	}
+
+	public String getManagerEmail() {
+		return managerEmail;
+	}
+
+	public void setManagerEmail(String managerEmail) {
+		this.managerEmail = managerEmail;
+	}
+
+	public String getManagerTitle() {
+		return managerTitle;
+	}
+
+	public void setManagerTitle(String managerTitle) {
+		this.managerTitle = managerTitle;
+	}
+
+	public String getManagerPhone() {
+		return managerPhone;
+	}
+
+	public void setManagerPhone(String managerPhone) {
+		this.managerPhone = managerPhone;
+	}
+
+	public String getDivChiefManagerName() {
+		return divChiefManagerName;
+	}
+
+	public void setDivChiefManagerName(String divChiefManagerName) {
+		this.divChiefManagerName = divChiefManagerName;
+	}
+
+	public String getDivChiefManagerEmail() {
+		return divChiefManagerEmail;
+	}
+
+	public void setDivChiefManagerEmail(String divChiefManagerEmail) {
+		this.divChiefManagerEmail = divChiefManagerEmail;
+	}
+
+	public String getDivChiefManagerPhone() {
+		return divChiefManagerPhone;
+	}
+
+	public void setDivChiefManagerPhone(String divChiefManagerPhone) {
+		this.divChiefManagerPhone = divChiefManagerPhone;
+	}
+
+	public String getDepartmentHeadName() {
+		return departmentHeadName;
+	}
+
+	public void setDepartmentHeadName(String departmentHeadName) {
+		this.departmentHeadName = departmentHeadName;
+	}
+
+	public String getDepartmentHeadEmail() {
+		return departmentHeadEmail;
+	}
+
+	public void setDepartmentHeadEmail(String departmentHeadEmail) {
+		this.departmentHeadEmail = departmentHeadEmail;
+	}
+
+	public String getDepartmentHeadPhone() {
+		return departmentHeadPhone;
+	}
+
+	public void setDepartmentHeadPhone(String departmentHeadPhone) {
+		this.departmentHeadPhone = departmentHeadPhone;
+	}
+
+	public String getDeptInfoSecurityOfficerName() {
+		return deptInfoSecurityOfficerName;
+	}
+
+	public void setDeptInfoSecurityOfficerName(String deptInfoSecurityOfficerName) {
+		this.deptInfoSecurityOfficerName = deptInfoSecurityOfficerName;
+	}
+
+	public String getDeptInfoSecurityOfficerEmail() {
+		return deptInfoSecurityOfficerEmail;
+	}
+
+	public void setDeptInfoSecurityOfficerEmail(String deptInfoSecurityOfficerEmail) {
+		this.deptInfoSecurityOfficerEmail = deptInfoSecurityOfficerEmail;
+	}
+
+	public String getDeptInfoSecurityOfficerPhone() {
+		return deptInfoSecurityOfficerPhone;
+	}
+
+	public void setDeptInfoSecurityOfficerPhone(String deptInfoSecurityOfficerPhone) {
+		this.deptInfoSecurityOfficerPhone = deptInfoSecurityOfficerPhone;
+	}
+
+	public String getApplicationCoordinatorName() {
+		return applicationCoordinatorName;
+	}
+
+	public void setApplicationCoordinatorName(String applicationCoordinatorName) {
+		this.applicationCoordinatorName = applicationCoordinatorName;
+	}
+
+	public String getApplicationCoordinatorEmail() {
+		return applicationCoordinatorEmail;
+	}
+
+	public void setApplicationCoordinatorEmail(String applicationCoordinatorEmail) {
+		this.applicationCoordinatorEmail = applicationCoordinatorEmail;
+	}
+
+	public String getApplicationCoordinatorPhone() {
+		return applicationCoordinatorPhone;
+	}
+
+	public void setApplicationCoordinatorPhone(String applicationCoordinatorPhone) {
+		this.applicationCoordinatorPhone = applicationCoordinatorPhone;
 	}
 
 }

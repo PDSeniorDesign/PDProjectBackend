@@ -78,7 +78,7 @@ public class ServiceRequestsController {
 		// Set requestNumber
 		s.setRequestNumber(randomRequestNumber);
 		
-		checkCompleteness(s);
+		checkSubmitted(s);
 		return serviceRequestDao.saveServiceRequest(s);
 	}
 
@@ -91,7 +91,6 @@ public class ServiceRequestsController {
 		originalServiceRequest.setCreateDate(s.getCreateDate());
 		originalServiceRequest.setSubmitDate(s.getSubmitDate());
 		originalServiceRequest.setEmployee(s.isEmployee());
-		originalServiceRequest.setComplete(s.isComplete());
 		originalServiceRequest.setRequestStatus(s.getRequestStatus());
 		originalServiceRequest.setNewRegistration(s.isNewRegistration());
 		originalServiceRequest.setDeletePriorRegistration(s.isDeletePriorRegistration());
@@ -169,8 +168,13 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSocialNetworkingFacebook(s.isSocialNetworkingFacebook());
 		originalServiceRequest.setSocialNetworkingTwitter(s.isSocialNetworkingTwitter());
 		originalServiceRequest.setSocialNetworkingLinkedIn(s.isSocialNetworkingLinkedIn());
+		originalServiceRequest.setSubmitted(s.isSubmitted());
+		originalServiceRequest.setManagerName(s.getManagerName());
+		originalServiceRequest.setManagerEmail(s.getManagerEmail());
+		originalServiceRequest.setManagerPhone(s.getManagerPhone());
+		originalServiceRequest.setManagerTitle(s.getManagerTitle());
 
-		checkCompleteness(originalServiceRequest);
+		checkSubmitted(originalServiceRequest);
 		
 		originalServiceRequest = serviceRequestDao.saveServiceRequest(originalServiceRequest);
 		return originalServiceRequest;
@@ -203,10 +207,6 @@ public class ServiceRequestsController {
 				break;
 			case "isEmployee":
 				s.setEmployee((boolean) patch.get(key));
-				break;
-			case "isComplete":
-				s.setComplete((boolean) patch.get(key));
-				checkCompleteness(s);
 				break;
 				// A.V.
 			case "replaceLostToken":
@@ -431,11 +431,30 @@ public class ServiceRequestsController {
 			case "socialNetworkingLinkedIn":
 				s.setSocialNetworkingLinkedIn((boolean) patch.get(key));
 				break;
+			case "isSubmitted":
+				s.setSubmitted((boolean) patch.get(key));
+				break;
+			case "managerName":
+				s.setManagerName((String) patch.get(key));
+				break;
+			case "managerPhone":
+				s.setManagerPhone((String) patch.get(key));
+				break;
+			case "managerTitle":
+				s.setManagerTitle((String) patch.get(key));
+				break;
+			case "managerEmail":
+				s.setManagerEmail((String) patch.get(key));
+				break;
 			default:
 				break;
 
 			}
 
+		}
+		
+		if (patch.keySet().contains("isSubmitted")) {
+			checkSubmitted(s);
 		}
 
 		s = serviceRequestDao.saveServiceRequest(s);
@@ -448,8 +467,8 @@ public class ServiceRequestsController {
 		serviceRequestDao.deleteServiceRequest(requestNumber);
 	}
 	
-	public void checkCompleteness(ServiceRequest s) throws Exception {
-		if (s.isComplete()) {
+	public void checkSubmitted(ServiceRequest s) {
+		if (s.isSubmitted()) {
 			s.setRequestStatus("Submitted");
 			String pattern = "MM/dd/yyyy";
 			DateFormat d = new SimpleDateFormat(pattern);
@@ -461,20 +480,15 @@ public class ServiceRequestsController {
 			String subject = "New Request Submitted";
 			String text = "A new service request was submitted by " + s.getFirstName() + " " + s.getLastName()
 					+ ". You can review the request at " + "http://localhost:8080/admin/service_requests/"
-					+ s.getRequestNumber() + ".";
+					+ s.getRequestNumber();
 
 			sendEmail.sendSimpleMessage(adminEmail, subject, text);
-			
-			if (s.isEmployee()) {
-				s.setAgreementId(Agreements.sendEmployeeAgreement(s));
-			}
-			else {
-				s.setAgreementId(Agreements.sendContractorAgreement(s));
-			}
+
 		}
 		else {
 			s.setRequestStatus("Draft");
 			s.setSubmitDate("");
 		}
 	}
+	
 }
