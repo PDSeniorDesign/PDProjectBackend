@@ -124,3 +124,18 @@ Your backend is now running! Feel free to test the service_requests endpoint by 
 }
 ```
 More detailed instructions in src/main/resources/HowToRunBackend.pdf
+
+**Common Request Statuses**
+STATUS ORIGIN | CODE | DESCRIPTION
+-----------|-----|------------
+Backend App | DRAFT | The Service Request is saved but not yet submitted by the user.
+Backend App | SUBMITTED_FOR_REVIEW | The Service Request is submitted by the user for Admin review.
+Adobe Sign API | CREATED | Agreement has been created and signing initiated.
+Adobe Sign API | ACTION_REQUESTED | Email sent to current recipient to sign Agreement.
+Adobe Sign API | EMAIL_VIEWED | Current recipient has seen Adobe Sign email.
+Adobe Sign API | ACTION_COMPLETED | Recipient has signed/approved the Agreement.
+Adobe Sign API | RECALLED | Adobe Sign user has cancelled Agreement.
+
+**Full List of Adobe Sign API Request Status Codes:**
+
+['ACCESS_CODE_GENERATED' or 'ACCESS_CODE_CONSUMED' or 'AUTO_CANCELLED_CONVERSION_PROBLEM' or 'ACTION_AUTO_DELEGATED' or 'ACTION_COMPLETED' or 'ACTION_COMPLETED_HOSTED' or 'ACTION_COMPLETED_OFFLINE' or 'ACTION_COMPLETED_OFFLINE_HOSTED' or 'ACTION_COMPLETED_WIDGET_VERIFIED' or 'ACTION_COMPLETED_WIDGET_VERIFIED_API_TOKEN' or 'ACTION_COMPLETED_WIDGET_VERIFICATION_WAIVED' or 'ACTION_DELEGATED' or 'ACTION_REPLACED_SIGNER' or 'ACTION_REQUESTED' or 'CREATED' or 'CREATED_FROM_WIDGET' or 'CREATED_OFFLINE' or 'CREATED_VIA_UPLOAD' or 'CREATED_VIA_ACROBAT' or 'CREATED_VIA_READER' or 'ACTIVATED' or 'DIGITAL_SIGN_UIDAI_SIGNER_CONSENT' or 'DIGSIGNED' or 'DEACTIVATED' or 'DOCUMENTS_DELETED' or 'DOWNLOADED' or 'EMAIL_BOUNCED' or 'EMAIL_VIEWED' or 'EXPIRED' or 'EXPIRED_AUTOMATICALLY' or 'FAXED_BY_SENDER' or 'FAXIN_RECEIVED' or 'KBA_AUTHENTICATED' or 'MODIFIED' or 'OFFLINE_SYNC' or 'OTHER' or 'PAID' or 'PRESIGNED' or 'RECALLED' or 'RECALLED_MAX_SIGNING_KBA_ATTEMPTS' or 'RECALLED_MAX_SIGNING_PASSWORD_ATTEMPTS' or 'RECALLED_MAX_SIGNING_PHONE_ATTEMPTS' or 'REJECTED' or 'SENDER_CREATED_NEW_REVISION' or 'SHARED' or 'SIGNED' or 'SIGNING_URL_REQUESTED' or 'UPLOADED_BY_SENDER' or 'USER_ACK_AGREEMENT_MODIFIED' or 'READY_TO_VAULT' or 'VAULTED' or 'WEB_IDENTITY_AUTHENTICATED' or 'WEB_IDENTITY_SPECIFIED' or 'WRITTEN_DOWNLOAD' or 'WRITTEN_SIGNED']
