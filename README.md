@@ -133,7 +133,7 @@ Backend App | SUBMITTED_FOR_REVIEW | The Service Request is submitted by the use
 Adobe Sign API | CREATED | Agreement has been created and signing initiated.
 Adobe Sign API | ACTION_REQUESTED | Email sent to current recipient to sign Agreement.
 Adobe Sign API | EMAIL_VIEWED | Current recipient has seen Adobe Sign email.
-Adobe Sign API | ACTION_COMPLETED | Recipient has signed/approved the Agreement.
+Adobe Sign API | ACTION_COMPLETED | Recipient has signed/approved the Agreement. This would also be the status code for a fully-signed Agreement.
 Adobe Sign API | RECALLED | Adobe Sign user has cancelled Agreement.
 
 **Full List of Adobe Sign API Request Status Codes:**
