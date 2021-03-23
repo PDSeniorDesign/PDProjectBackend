@@ -11,9 +11,10 @@ Backend operations for the L.A. County Public Defender's modernized database pro
 METHOD | ENDPOINT | DESCRIPTION
 -----------|-----|------------
 GET | service_requests | Gets all the service requests in the database
-GET | service_requests/{id} | Get a specific service request based on id
+GET | service_requests/{requestNumber} | Get a specific service request based on requestNumber
 POST | service_requests | Add a service request
-PUT | service_request/{id} | Update a service request
+PATCH | service_requests/{requestNumber} | Update a service request
+DELETE | service_requests/{requestNumber} | Delete a service request
 
 &nbsp;
 **2. Request Status**
@@ -21,6 +22,37 @@ PUT | service_request/{id} | Update a service request
 METHOD | ENDPOINT | DESCRIPTION
 -----------|-----|------------
 GET | request_statuses/{id} | Get the service request's request status
+
+&nbsp;
+**3. Admin**
+METHOD | ENDPOINT | DESCRIPTION
+-----------|-----|------------
+GET | admin/service_requests | Gets all the service requests (condensed to 4 fields) in the database
+GET | admin/service_requests/{requestNumber} | Get a specific service request based on requestNumber
+PATCH | admin/service_requests/{requestNumber} | Make completely unrestricted updates to any service request fields
+PATCH | admin/reset_password | Update password with new-password header
+GET | div_chief_managers | Get all Div Chief Managers
+GET | div_chief_managers/{id} | Get a Div Chief Manager based on id
+POST | div_chief_managers | Add a new Div Chief Manager
+PATCH | div_chief_managers/{id} | Update a Div Chief Manager
+DELETE | div_chief_managers/{id} | Delete a Div Chief Manager
+GET | dept_info_security_officers | Get all Dept Info Security Officers
+GET | dept_info_security_officers/{id} | Get a Dept Info Security Officer based on id
+POST | dept_info_security_officers | Add a new Dept Info Security Officer
+PATCH | dept_info_security_officers/{id} | Update a Dept Info Security Officer
+DELETE | dept_info_security_officers/{id} | Delete a Dept Info Security Officer
+GET | department_heads | Get all Department Heads
+GET | department_heads/{id} | Get a Department Head based on id
+POST | department_heads | Add a new Department Head
+PATCH | department_heads/{id} | Update a Department Head
+DELETE | department_heads/{id} | Delete a Department Head
+GET | application_coordinators | Get all Application Coordinators
+GET | application_coordinators/{id} | Get an Application Coordinator based on id
+POST | application_coordinators | Add an new Application Coordinator
+PATCH | application_coordinators/{id} | Update an Application Coordinator
+DELETE | application_coordinators/{id} | Delete an Application Coordinator
+
+**Admin Password: pass123**
 
 &nbsp;
 ## Installation
