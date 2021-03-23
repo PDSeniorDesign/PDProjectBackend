@@ -24,10 +24,7 @@ public class RequestStatusesController {
 		ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(requestNumber);
 		if (serviceRequest != null) {
 			RequestStatusResponse res = new RequestStatusResponse(serviceRequest.getRequestNumber(),
-					serviceRequest.getRequestStatus(), serviceRequest.getFirstName(), serviceRequest.getLastName()); // Can
-																														// return
-																														// null
-			// pointer
+					serviceRequest.getRequestStatus(), serviceRequest.getFirstName(), serviceRequest.getLastName()); 
 			return res;
 		}
 		else {

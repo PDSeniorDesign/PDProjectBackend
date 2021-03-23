@@ -9,14 +9,25 @@ import sbrest.model.ServiceRequest;
 public class Agreements {
 
 	@SuppressWarnings("unchecked")
-	public static String sendEmployeeAgreement(ServiceRequest serviceRequest) throws Exception {
+	public static String sendAgreement(ServiceRequest serviceRequest) throws Exception {
 		// URL to invoke the agreements end point.
 		String accessToken = OAuthTokens.getOauthAccessToken();
 		String url = "https://api.na3.adobesign.com:443/api/rest/v6/agreements";
-		String email = serviceRequest.getEmployeeEmailAddress();
-
-		String agreementName = "PD Employee Agreement";
-		String documentId = "CBJCHBCAABAA6bgfjW_Jk95KdQ_mzNiuHKcjtz153u2K";
+		
+		String email = "";
+		String agreementName = "";
+		String documentId = "";
+		if (serviceRequest.isEmployee()) {
+			email = serviceRequest.getEmployeeEmailAddress();
+			agreementName = "PD Employee Agreement";
+			documentId = "CBJCHBCAABAA6bgfjW_Jk95KdQ_mzNiuHKcjtz153u2K";
+		}
+		else {
+			email = serviceRequest.getCompanyEmailAddress();
+			agreementName = "PD Contractor Agreement";
+			documentId = "CBJCHBCAABAANFj6EXi626GhARMLjULZrrA-CHakWujD";
+		}
+		
 
 		// Create HTTP header list
 		HashMap<String, String> headers = new HashMap<String, String>();
@@ -29,6 +40,7 @@ public class Agreements {
 
 		// Based on the document type retrieved from above, set the corresponding item
 		// in the request JSON structure.
+
 		JSONObject requestJson = new JSONObject();
 		ArrayList<JSONObject> fileInfos = new ArrayList<JSONObject>();
 		JSONObject libraryDocId = new JSONObject();
@@ -38,10 +50,10 @@ public class Agreements {
 		requestJson.put("name", agreementName);
 		requestJson.put("state", "IN_PROCESS");
 		requestJson.put("signatureType", "ESIGN");
-
+		
 		ArrayList<JSONObject> participantSetsInfo = new ArrayList<JSONObject>();
 
-		// Add 1st participant
+		// Add 1st participant (Requester)
 		JSONObject participantSets1Info = new JSONObject();
 		ArrayList<JSONObject> memberInfos1 = new ArrayList<JSONObject>();
 		JSONObject memberInfo1Json = new JSONObject();
@@ -52,193 +64,70 @@ public class Agreements {
 		participantSets1Info.put("memberInfos", memberInfos1);
 		participantSetsInfo.add(participantSets1Info);
 
-		// Add 2nd participant
-		JSONObject participantSets2Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos2 = new ArrayList<JSONObject>();
-		JSONObject memberInfo2Json = new JSONObject();
-		memberInfo2Json.put("email", email);
-		memberInfos2.add(memberInfo2Json);
-		participantSets2Info.put("order", 2);
-		participantSets2Info.put("role", "SIGNER");
-		participantSets2Info.put("memberInfos", memberInfos2);
-		participantSetsInfo.add(participantSets2Info);
+		// Add 2nd participant (Manager)
+		if (serviceRequest.getManagerEmail() != null) {
+			JSONObject participantSets2Info = new JSONObject();
+			ArrayList<JSONObject> memberInfos2 = new ArrayList<JSONObject>();
+			JSONObject memberInfo2Json = new JSONObject();
+			memberInfo2Json.put("email", serviceRequest.getManagerEmail());
+			memberInfos2.add(memberInfo2Json);
+			participantSets2Info.put("order", 2);
+			participantSets2Info.put("role", "APPROVER");
+			participantSets2Info.put("memberInfos", memberInfos2);
+			participantSetsInfo.add(participantSets2Info);
+		}
 
-		// Add 3rd participant
-		JSONObject participantSets3Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos3 = new ArrayList<JSONObject>();
-		JSONObject memberInfo3Json = new JSONObject();
-		memberInfo3Json.put("email", email);
-		memberInfos3.add(memberInfo3Json);
-		participantSets3Info.put("order", 3);
-		participantSets3Info.put("role", "SIGNER");
-		participantSets3Info.put("memberInfos", memberInfos3);
-		participantSetsInfo.add(participantSets3Info);
+		// Add 3rd participant (Div Chief / Manager)
+		if (serviceRequest.getDivChiefManagerEmail() != null) {
+			JSONObject participantSets3Info = new JSONObject();
+			ArrayList<JSONObject> memberInfos3 = new ArrayList<JSONObject>();
+			JSONObject memberInfo3Json = new JSONObject();
+			memberInfo3Json.put("email", serviceRequest.getDivChiefManagerEmail());
+			memberInfos3.add(memberInfo3Json);
+			participantSets3Info.put("order", 3);
+			participantSets3Info.put("role", "APPROVER");
+			participantSets3Info.put("memberInfos", memberInfos3);
+			participantSetsInfo.add(participantSets3Info);
+		}
 
-		// Add 4th participant
-		JSONObject participantSets4Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos4 = new ArrayList<JSONObject>();
-		JSONObject memberInfo4Json = new JSONObject();
-		memberInfo4Json.put("email", email);
-		memberInfos4.add(memberInfo4Json);
-		participantSets4Info.put("order", 4);
-		participantSets4Info.put("role", "SIGNER");
-		participantSets4Info.put("memberInfos", memberInfos4);
-		participantSetsInfo.add(participantSets4Info);
+		// Add 4th participant (Department Head)
+		if (serviceRequest.getDepartmentHeadEmail() != null) {
+			JSONObject participantSets4Info = new JSONObject();
+			ArrayList<JSONObject> memberInfos4 = new ArrayList<JSONObject>();
+			JSONObject memberInfo4Json = new JSONObject();
+			memberInfo4Json.put("email", serviceRequest.getDepartmentHeadEmail());
+			memberInfos4.add(memberInfo4Json);
+			participantSets4Info.put("order", 4);
+			participantSets4Info.put("role", "APPROVER");
+			participantSets4Info.put("memberInfos", memberInfos4);
+			participantSetsInfo.add(participantSets4Info);
+		}
 
-		// Add 5th participant
-		JSONObject participantSets5Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos5 = new ArrayList<JSONObject>();
-		JSONObject memberInfo5Json = new JSONObject();
-		memberInfo5Json.put("email", email);
-		memberInfos5.add(memberInfo5Json);
-		participantSets5Info.put("order", 5);
-		participantSets5Info.put("role", "SIGNER");
-		participantSets5Info.put("memberInfos", memberInfos5);
-		participantSetsInfo.add(participantSets5Info);
+		// Add 5th participant (Department Info Security Officer)
+		if (serviceRequest.getDeptInfoSecurityOfficerEmail() != null) {
+			JSONObject participantSets5Info = new JSONObject();
+			ArrayList<JSONObject> memberInfos5 = new ArrayList<JSONObject>();
+			JSONObject memberInfo5Json = new JSONObject();
+			memberInfo5Json.put("email", serviceRequest.getDeptInfoSecurityOfficerEmail());
+			memberInfos5.add(memberInfo5Json);
+			participantSets5Info.put("order", 5);
+			participantSets5Info.put("role", "APPROVER");
+			participantSets5Info.put("memberInfos", memberInfos5);
+			participantSetsInfo.add(participantSets5Info);
+		}
 
-		// Add 6th participant
-		JSONObject participantSets6Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos6 = new ArrayList<JSONObject>();
-		JSONObject memberInfo6Json = new JSONObject();
-		memberInfo6Json.put("email", email);
-		memberInfos6.add(memberInfo6Json);
-		participantSets6Info.put("order", 6);
-		participantSets6Info.put("role", "SIGNER");
-		participantSets6Info.put("memberInfos", memberInfos6);
-		participantSetsInfo.add(participantSets6Info);
-
-		// Add 7th participant
-		JSONObject participantSets7Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos7 = new ArrayList<JSONObject>();
-		JSONObject memberInfo7Json = new JSONObject();
-		memberInfo7Json.put("email", email);
-		memberInfos7.add(memberInfo7Json);
-		participantSets7Info.put("order", 7);
-		participantSets7Info.put("role", "APPROVER");
-		participantSets7Info.put("memberInfos", memberInfos7);
-		participantSetsInfo.add(participantSets7Info);
-
-		requestJson.put("participantSetsInfo", participantSetsInfo);
-
-		ArrayList<JSONObject> mergeFieldInfo = populateTemplate(serviceRequest);
-
-		requestJson.put("mergeFieldInfo", mergeFieldInfo);
-
-		responseJson = (JSONObject) OAuthTokens.makeApiCall(url, "POST", headers, requestJson.toJSONString());
-
-		String agreementId = responseJson.get("id").toString();
-		return agreementId;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static String sendContractorAgreement(ServiceRequest serviceRequest) throws Exception {
-		// URL to invoke the agreements end point.
-		String accessToken = OAuthTokens.getOauthAccessToken();
-		String url = "https://api.na3.adobesign.com:443/api/rest/v6/agreements";
-		String email = serviceRequest.getCompanyEmailAddress();
-
-		String agreementName = "PD Contractor Agreement";
-		String documentId = "CBJCHBCAABAANFj6EXi626GhARMLjULZrrA-CHakWujD";
-
-		// Create HTTP header list
-		HashMap<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type", "application/json;charset=UTF-8");
-		headers.put("Authorization", accessToken);
-
-		// Invoke API and get JSON response. The ID name determines what the input
-		// (request) JSON structure should contain.
-		JSONObject responseJson = null;
-
-		// Based on the document type retrieved from above, set the corresponding item
-		// in the request JSON structure.
-		JSONObject requestJson = new JSONObject();
-		ArrayList<JSONObject> fileInfos = new ArrayList<JSONObject>();
-		JSONObject libraryDocId = new JSONObject();
-		libraryDocId.put("libraryDocumentId", documentId);
-		fileInfos.add(libraryDocId);
-		requestJson.put("fileInfos", fileInfos);
-		requestJson.put("name", agreementName);
-		requestJson.put("state", "IN_PROCESS");
-		requestJson.put("signatureType", "ESIGN");
-
-		ArrayList<JSONObject> participantSetsInfo = new ArrayList<JSONObject>();
-
-		// Add 1st participant
-		JSONObject participantSets1Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos1 = new ArrayList<JSONObject>();
-		JSONObject memberInfo1Json = new JSONObject();
-		memberInfo1Json.put("email", email);
-		memberInfos1.add(memberInfo1Json);
-		participantSets1Info.put("order", 1);
-		participantSets1Info.put("role", "SIGNER");
-		participantSets1Info.put("memberInfos", memberInfos1);
-		participantSetsInfo.add(participantSets1Info);
-
-		// Add 2nd participant
-		JSONObject participantSets2Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos2 = new ArrayList<JSONObject>();
-		JSONObject memberInfo2Json = new JSONObject();
-		memberInfo2Json.put("email", email);
-		memberInfos2.add(memberInfo2Json);
-		participantSets2Info.put("order", 2);
-		participantSets2Info.put("role", "SIGNER");
-		participantSets2Info.put("memberInfos", memberInfos2);
-		participantSetsInfo.add(participantSets2Info);
-
-		// Add 3rd participant
-		JSONObject participantSets3Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos3 = new ArrayList<JSONObject>();
-		JSONObject memberInfo3Json = new JSONObject();
-		memberInfo3Json.put("email", email);
-		memberInfos3.add(memberInfo3Json);
-		participantSets3Info.put("order", 3);
-		participantSets3Info.put("role", "SIGNER");
-		participantSets3Info.put("memberInfos", memberInfos3);
-		participantSetsInfo.add(participantSets3Info);
-
-		// Add 4th participant
-		JSONObject participantSets4Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos4 = new ArrayList<JSONObject>();
-		JSONObject memberInfo4Json = new JSONObject();
-		memberInfo4Json.put("email", email);
-		memberInfos4.add(memberInfo4Json);
-		participantSets4Info.put("order", 4);
-		participantSets4Info.put("role", "SIGNER");
-		participantSets4Info.put("memberInfos", memberInfos4);
-		participantSetsInfo.add(participantSets4Info);
-
-		// Add 5th participant
-		JSONObject participantSets5Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos5 = new ArrayList<JSONObject>();
-		JSONObject memberInfo5Json = new JSONObject();
-		memberInfo5Json.put("email", email);
-		memberInfos5.add(memberInfo5Json);
-		participantSets5Info.put("order", 5);
-		participantSets5Info.put("role", "SIGNER");
-		participantSets5Info.put("memberInfos", memberInfos5);
-		participantSetsInfo.add(participantSets5Info);
-
-		// Add 6th participant
-		JSONObject participantSets6Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos6 = new ArrayList<JSONObject>();
-		JSONObject memberInfo6Json = new JSONObject();
-		memberInfo6Json.put("email", email);
-		memberInfos6.add(memberInfo6Json);
-		participantSets6Info.put("order", 6);
-		participantSets6Info.put("role", "SIGNER");
-		participantSets6Info.put("memberInfos", memberInfos6);
-		participantSetsInfo.add(participantSets6Info);
-
-		// Add 7th participant
-		JSONObject participantSets7Info = new JSONObject();
-		ArrayList<JSONObject> memberInfos7 = new ArrayList<JSONObject>();
-		JSONObject memberInfo7Json = new JSONObject();
-		memberInfo7Json.put("email", email);
-		memberInfos7.add(memberInfo7Json);
-		participantSets7Info.put("order", 7);
-		participantSets7Info.put("role", "APPROVER");
-		participantSets7Info.put("memberInfos", memberInfos7);
-		participantSetsInfo.add(participantSets7Info);
+		// Add 6th participant (ISD / Application Coordinator)
+		if (serviceRequest.getApplicationCoordinatorEmail() != null) {
+			JSONObject participantSets6Info = new JSONObject();
+			ArrayList<JSONObject> memberInfos6 = new ArrayList<JSONObject>();
+			JSONObject memberInfo6Json = new JSONObject();
+			memberInfo6Json.put("email", serviceRequest.getApplicationCoordinatorEmail());
+			memberInfos6.add(memberInfo6Json);
+			participantSets6Info.put("order", 6);
+			participantSets6Info.put("role", "APPROVER");
+			participantSets6Info.put("memberInfos", memberInfos6);
+			participantSetsInfo.add(participantSets6Info);
+		}
 
 		requestJson.put("participantSetsInfo", participantSetsInfo);
 
@@ -1019,6 +908,119 @@ public class Agreements {
 			fieldJsonArray.add(countyPhoneNumber2);
 			//output += "{ \"fieldName\": \"countyPhoneNumber2\", \"defaultValue\": \"" + serviceRequest.getCountyPhoneNumber() + "\"}, ";
 		}
+		
+		if (serviceRequest.getManagerEmail() != null) {
+			JSONObject managerEmail = new JSONObject();
+			managerEmail.put("fieldName", "managerEmail");
+			managerEmail.put("defaultValue", serviceRequest.getManagerEmail());
+			fieldJsonArray.add(managerEmail);
+		}
+		
+		if (serviceRequest.getManagerName() != null) {
+			JSONObject managerName = new JSONObject();
+			managerName.put("fieldName", "managerName");
+			managerName.put("defaultValue", serviceRequest.getManagerName());
+			fieldJsonArray.add(managerName);
+		}
+		
+		if (serviceRequest.getManagerPhone() != null) {
+			JSONObject managerPhone = new JSONObject();
+			managerPhone.put("fieldName", "managerPhone");
+			managerPhone.put("defaultValue", serviceRequest.getManagerPhone());
+			fieldJsonArray.add(managerPhone);
+		}
+		
+		if (serviceRequest.getManagerTitle() != null) {
+			JSONObject managerTitle = new JSONObject();
+			managerTitle.put("fieldName", "managerTitle");
+			managerTitle.put("defaultValue", serviceRequest.getManagerTitle());
+			fieldJsonArray.add(managerTitle);
+		}
+		
+		if (serviceRequest.getDivChiefManagerEmail() != null) {
+			JSONObject divChiefManagerEmail = new JSONObject();
+			divChiefManagerEmail.put("fieldName", "divChiefManagerEmail");
+			divChiefManagerEmail.put("defaultValue", serviceRequest.getDivChiefManagerEmail());
+			fieldJsonArray.add(divChiefManagerEmail);
+		}
+		
+		if (serviceRequest.getDivChiefManagerName() != null) {
+			JSONObject divChiefManagerName = new JSONObject();
+			divChiefManagerName.put("fieldName", "divChiefManagerName");
+			divChiefManagerName.put("defaultValue", serviceRequest.getDivChiefManagerName());
+			fieldJsonArray.add(divChiefManagerName);
+		}
+		
+		if (serviceRequest.getDivChiefManagerPhone() != null) {
+			JSONObject divChiefManagerPhone = new JSONObject();
+			divChiefManagerPhone.put("fieldName", "divChiefManagerPhone");
+			divChiefManagerPhone.put("defaultValue", serviceRequest.getDivChiefManagerPhone());
+			fieldJsonArray.add(divChiefManagerPhone);
+		}
+		
+		if (serviceRequest.getDepartmentHeadEmail() != null) {
+			JSONObject departmentHeadEmail = new JSONObject();
+			departmentHeadEmail.put("fieldName", "departmentHeadEmail");
+			departmentHeadEmail.put("defaultValue", serviceRequest.getDepartmentHeadEmail());
+			fieldJsonArray.add(departmentHeadEmail);
+		}
+		
+		if (serviceRequest.getDepartmentHeadName() != null) {
+			JSONObject departmentHeadName = new JSONObject();
+			departmentHeadName.put("fieldName", "departmentHeadName");
+			departmentHeadName.put("defaultValue", serviceRequest.getDepartmentHeadName());
+			fieldJsonArray.add(departmentHeadName);
+		}
+		
+		if (serviceRequest.getDepartmentHeadPhone() != null) {
+			JSONObject departmentHeadPhone = new JSONObject();
+			departmentHeadPhone.put("fieldName", "departmentHeadPhone");
+			departmentHeadPhone.put("defaultValue", serviceRequest.getDepartmentHeadPhone());
+			fieldJsonArray.add(departmentHeadPhone);
+		}
+		
+		if (serviceRequest.getDeptInfoSecurityOfficerEmail() != null) {
+			JSONObject deptInfoSecurityOfficerEmail = new JSONObject();
+			deptInfoSecurityOfficerEmail.put("fieldName", "deptInfoSecurityOfficerEmail");
+			deptInfoSecurityOfficerEmail.put("defaultValue", serviceRequest.getDeptInfoSecurityOfficerEmail());
+			fieldJsonArray.add(deptInfoSecurityOfficerEmail);
+		}
+		
+		if (serviceRequest.getDeptInfoSecurityOfficerName() != null) {
+			JSONObject deptInfoSecurityOfficerName = new JSONObject();
+			deptInfoSecurityOfficerName.put("fieldName", "deptInfoSecurityOfficerName");
+			deptInfoSecurityOfficerName.put("defaultValue", serviceRequest.getDeptInfoSecurityOfficerName());
+			fieldJsonArray.add(deptInfoSecurityOfficerName);
+		}
+		
+		if (serviceRequest.getDeptInfoSecurityOfficerPhone() != null) {
+			JSONObject deptInfoSecurityOfficerPhone = new JSONObject();
+			deptInfoSecurityOfficerPhone.put("fieldName", "deptInfoSecurityOfficerPhone");
+			deptInfoSecurityOfficerPhone.put("defaultValue", serviceRequest.getDeptInfoSecurityOfficerPhone());
+			fieldJsonArray.add(deptInfoSecurityOfficerPhone);
+		}
+		
+		if (serviceRequest.getApplicationCoordinatorEmail() != null) {
+			JSONObject applicationCoordinatorEmail = new JSONObject();
+			applicationCoordinatorEmail.put("fieldName", "applicationCoordinatorEmail");
+			applicationCoordinatorEmail.put("defaultValue", serviceRequest.getApplicationCoordinatorEmail());
+			fieldJsonArray.add(applicationCoordinatorEmail);
+		}
+		
+		if (serviceRequest.getApplicationCoordinatorName() != null) {
+			JSONObject applicationCoordinatorName = new JSONObject();
+			applicationCoordinatorName.put("fieldName", "applicationCoordinatorName");
+			applicationCoordinatorName.put("defaultValue", serviceRequest.getApplicationCoordinatorName());
+			fieldJsonArray.add(applicationCoordinatorName);
+		}
+		
+		if (serviceRequest.getApplicationCoordinatorPhone() != null) {
+			JSONObject applicationCoordinatorPhone = new JSONObject();
+			applicationCoordinatorPhone.put("fieldName", "applicationCoordinatorPhone");
+			applicationCoordinatorPhone.put("defaultValue", serviceRequest.getApplicationCoordinatorPhone());
+			fieldJsonArray.add(applicationCoordinatorPhone);
+		}
+		
 
 		return fieldJsonArray;
 	}

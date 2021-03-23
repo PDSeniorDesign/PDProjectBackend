@@ -22,6 +22,7 @@ import sbrest.model.ServiceRequest;
 import sbrest.model.RequestStatusResponse;
 import sbrest.model.dao.AdminDao;
 import sbrest.model.dao.ServiceRequestDao;
+import sbrest.signapi.Agreements;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -369,12 +370,67 @@ public class AdminController {
 				case "socialNetworkingLinkedIn":
 					s.setSocialNetworkingLinkedIn((boolean) patch.get(key));
 					break;
+				case "isSubmitted":
+					s.setSubmitted((boolean) patch.get(key));
+					break;
+				case "managerName":
+					s.setManagerName((String) patch.get(key));
+					break;
+				case "managerPhone":
+					s.setManagerPhone((String) patch.get(key));
+					break;
+				case "managerTitle":
+					s.setManagerTitle((String) patch.get(key));
+					break;
+				case "managerEmail":
+					s.setManagerEmail((String) patch.get(key));
+					break;
+				case "divChiefManagerName":
+					s.setDivChiefManagerName((String) patch.get(key));
+					break;
+				case "divChiefManagerPhone":
+					s.setDivChiefManagerPhone((String) patch.get(key));
+					break;
+				case "divChiefManagerEmail":
+					s.setDivChiefManagerEmail((String) patch.get(key));
+					break;
+				case "departmentHeadName":
+					s.setDepartmentHeadName((String) patch.get(key));
+					break;
+				case "departmentHeadPhone":
+					s.setDepartmentHeadPhone((String) patch.get(key));
+					break;
+				case "departmentHeadEmail":
+					s.setDepartmentHeadEmail((String) patch.get(key));
+					break;
+				case "deptInfoSecurityOfficerName":
+					s.setDeptInfoSecurityOfficerName((String) patch.get(key));
+					break;
+				case "deptInfoSecurityOfficerPhone":
+					s.setDeptInfoSecurityOfficerPhone((String) patch.get(key));
+					break;
+				case "deptInfoSecurityOfficerEmail":
+					s.setDeptInfoSecurityOfficerEmail((String) patch.get(key));
+					break;
+				case "applicationCoordinatorName":
+					s.setApplicationCoordinatorName((String) patch.get(key));
+					break;
+				case "applicationCoordinatorPhone":
+					s.setApplicationCoordinatorPhone((String) patch.get(key));
+					break;
+				case "applicationCoordinatorEmail":
+					s.setApplicationCoordinatorEmail((String) patch.get(key));
+					break;
 				default:
 					break;
 
 				}
 			}
 
+			if (patch.keySet().contains("isComplete")) {
+				checkCompleteness(s);	
+			}
+			
 			s = serviceRequestDao.saveServiceRequest(s);
 			return s;
 			
@@ -386,7 +442,11 @@ public class AdminController {
 	
 	
 	
-	
+	public void checkCompleteness(ServiceRequest s) throws Exception {
+		if (s.isComplete()) {
+			s.setAgreementId(Agreements.sendAgreement(s));
+		}
+	}
 	
 	
 	
