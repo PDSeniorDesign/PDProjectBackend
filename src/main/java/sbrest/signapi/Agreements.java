@@ -191,8 +191,10 @@ public class Agreements {
 		// output += "{ \"fieldName\": \"middleInitial\", \"defaultValue\": \"" + serviceRequest.getMiddleInitial() + "\"}, ";
 
 		String fullName = serviceRequest.getFirstName() + " ";
-		if (!serviceRequest.getMiddleInitial().isEmpty()) {
-			fullName += serviceRequest.getMiddleInitial() + " ";
+		if (serviceRequest.getMiddleInitial() != null) {
+			if (!serviceRequest.getMiddleInitial().isEmpty()) {
+				fullName += serviceRequest.getMiddleInitial() + " ";
+			}
 		}
 		fullName += serviceRequest.getLastName();
 
@@ -212,8 +214,10 @@ public class Agreements {
 		fieldJsonArray.add(fullName3);
 
 		String v2FullName = serviceRequest.getLastName() + ", " + serviceRequest.getFirstName();
-		if (!serviceRequest.getMiddleInitial().isEmpty()) {
-			v2FullName += " " + serviceRequest.getMiddleInitial();
+		if (serviceRequest.getMiddleInitial() != null) {
+			if (!serviceRequest.getMiddleInitial().isEmpty()) {
+				v2FullName += " " + serviceRequest.getMiddleInitial();
+			}
 		}
 		JSONObject v2FullNameJson = new JSONObject();
 		v2FullNameJson.put("fieldName", "v2FullName");
