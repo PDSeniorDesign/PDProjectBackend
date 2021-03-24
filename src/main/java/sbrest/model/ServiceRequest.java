@@ -196,7 +196,7 @@ public class ServiceRequest {
 		DateFormat d = new SimpleDateFormat(pattern);
 		Date currentDate = Calendar.getInstance().getTime();
 		this.createDate = d.format(currentDate);
-		this.requestStatus = "Draft";
+		this.requestStatus = "DRAFT";
 		
 		this.agreementId = "";
 		this.lastName = "";

@@ -36,7 +36,7 @@ public class OAuthTokens {
 	 * access token. If refresh token is not provided then a new OAuth access token
 	 * will be generated with new refresh token.
 	 */
-	private final static String OAUTH_REFRESH_TOKEN = "3AAABLblqZhDQ5o90MazwRHz-27VdetNzn5MuN-cxcFufW35KY9BaxyCuQiO4T9-nKu8Q6a_CcEI*";
+	private final static String OAUTH_REFRESH_TOKEN = "3AAABLblqZhBqIMVIHXmIVCo8AKV0BGfltLJFHDp08PU2CsYcltic7aEsLPMRCxNohBA35mPjXac*";
 
 	/**
 	 * Fetches the access token for the specified user.
