@@ -7,9 +7,11 @@ import org.json.simple.JSONObject;
 
 public class AgreementEvents {
 	public static void main(String[] args) throws Exception {
-		System.out.println(getAgreementEvents("CBJCHBCAABAAGJqiTBPRJBydvCX5VKN_n3WFhNpRC1n5"));
+		System.out.println(getAgreementEvents("CBJCHBCAABAAlW5fOL0NgJbntzpicGWsZlr44VckExrG"));
 		
-		System.out.println(getMostRecentAgreementEvent("CBJCHBCAABAAGJqiTBPRJBydvCX5VKN_n3WFhNpRC1n5"));
+		System.out.println(getMostRecentAgreementEvent("CBJCHBCAABAAlW5fOL0NgJbntzpicGWsZlr44VckExrG"));
+		
+		System.out.println(getMostRecentAgreementEventType("CBJCHBCAABAAlW5fOL0NgJbntzpicGWsZlr44VckExrG"));
 		
 	}
 	
@@ -33,5 +35,14 @@ public class AgreementEvents {
 		String lastEventDescription = (String)mostRecentEvent.get("description");
 		String lastEventDate = (String)mostRecentEvent.get("date");
 		return "Current Status (" + lastEventDate +  "): " + lastEventDescription;
+	}
+	
+	public static String getMostRecentAgreementEventType(String agreementId) throws Exception {
+		JSONObject response = getAgreementEvents(agreementId);
+		JSONArray eventsList = ((JSONArray) response.get("events"));
+
+		JSONObject mostRecentEvent = (JSONObject)eventsList.get(eventsList.size() - 1);
+		String lastEventType = (String)mostRecentEvent.get("type");
+		return lastEventType;
 	}
 }

@@ -6,10 +6,14 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +22,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import sbrest.model.Admin;
+import sbrest.model.ApplicationCoordinator;
+import sbrest.model.DepartmentHead;
+import sbrest.model.DeptInfoSecurityOfficer;
+import sbrest.model.DivChiefManager;
+import sbrest.model.Field;
+import sbrest.model.Form;
 import sbrest.model.ServiceRequest;
 import sbrest.model.RequestStatusResponse;
 import sbrest.model.dao.AdminDao;
+import sbrest.model.dao.ApplicationCoordinatorDao;
+import sbrest.model.dao.DepartmentHeadDao;
+import sbrest.model.dao.DeptInfoSecurityOfficerDao;
+import sbrest.model.dao.DivChiefManagerDao;
+import sbrest.model.dao.FormDao;
 import sbrest.model.dao.ServiceRequestDao;
+import sbrest.signapi.AgreementEvents;
 import sbrest.signapi.Agreements;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -66,7 +82,7 @@ public class AdminController {
 	
 	//Gets all details of a specified Service Request if user is admin
 	@GetMapping("/service_requests/{requestNumber}")
-	public ServiceRequest get(@RequestHeader("password") String password, @PathVariable Integer requestNumber) {
+	public ServiceRequest get(@RequestHeader("password") String password, @PathVariable Integer requestNumber) throws Exception {
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 
 		// get password from user input and database, then compare
@@ -76,6 +92,9 @@ public class AdminController {
 		if (dbPassword.equals(password)) {
 			if (s == null)
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service Request not found");
+			
+			s = updateRequestStatus(s);
+			
 			return s;
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
@@ -445,15 +464,377 @@ public class AdminController {
 	public void checkCompleteness(ServiceRequest s) throws Exception {
 		if (s.isComplete()) {
 			s.setAgreementId(Agreements.sendAgreement(s));
+			s.setRequestStatus(AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId()));
 		}
 	}
 	
-	
-	
-// NEEDED?
-//		@GetMapping
-//	    public List<Admin> Admin(ModelMap models) {
-//	        return adminDao.getAdmins();
-//	    }
+	public ServiceRequest updateRequestStatus(ServiceRequest s) throws Exception {
+		
+		if (s.getAgreementId() != null) {
+			if (!s.getAgreementId().isEmpty() && s.getRequestStatus() != "RECALLED" && s.getRequestStatus() != "ACTION_COMPLETED") {
+				String requestStatus = AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId());
+				s.setRequestStatus(requestStatus);
+					
+				s = serviceRequestDao.saveServiceRequest(s);
+			}
+		}
+		
+		return s;
+		
+	}
+
+	// New Admin Endpoints for participant info.
+	// Password-protected endpoints.
+	@Autowired
+    private DivChiefManagerDao divChiefManagerDao;
+
+    @GetMapping("/div_chief_managers")
+    public List<DivChiefManager> divChiefManagers(@RequestHeader("password") String password, ModelMap models) throws Exception {
+    	
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return divChiefManagerDao.getDivChiefManagers();
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+    }
+    
+    @GetMapping("/div_chief_managers/{id}")
+    public DivChiefManager divChiefManager(@RequestHeader("password") String password, @PathVariable Integer id ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			DivChiefManager d = divChiefManagerDao.getDivChiefManager(id);
+	    	if (d == null) throw new ResponseStatusException( HttpStatus.NOT_FOUND, 
+	    			"Division Chief / Manager not found" );
+	    	return d;
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @PostMapping("/div_chief_managers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DivChiefManager addDivChiefManager(@RequestHeader("password") String password, @RequestBody DivChiefManager d) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return divChiefManagerDao.saveDivChiefManager(d);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    }
+    
+    @PatchMapping("/div_chief_managers/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public DivChiefManager updateDivChiefManager(@RequestHeader("password") String password, @PathVariable Integer id, @RequestBody Map<String,Object> patch ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+
+			DivChiefManager d = divChiefManagerDao.getDivChiefManager(id);
+	    	
+	    	for (String key : patch.keySet()) {
+	    		
+	    		switch(key) {
+	    		
+		    		case "name":
+		    			d.setName( (String) patch.get(key));
+		    			break;
+		    		case "phone":
+		    			d.setPhone( (String) patch.get(key));
+		    			break;    
+		    		case "email":
+		    			d.setEmail( (String) patch.get(key));
+		    		default:
+		    			break;
+	    		}
+	    		
+	    	}
+	    	
+	    	d = divChiefManagerDao.saveDivChiefManager(d);
+	    	return d;
+
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+   
+    }
+    
+    @DeleteMapping("/div_chief_managers/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDivChiefManager(@RequestHeader("password") String password, @PathVariable Integer id) {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			divChiefManagerDao.deleteDivChiefManager(id);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @Autowired
+    private DepartmentHeadDao departmentHeadDao;
+
+    @GetMapping("/department_heads")
+    public List<DepartmentHead> departmentHeads(@RequestHeader("password") String password, ModelMap models) throws Exception {
+    	
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return departmentHeadDao.getDepartmentHeads();
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+    }
+    
+    @GetMapping("/department_heads/{id}")
+    public DepartmentHead departmentHead(@RequestHeader("password") String password, @PathVariable Integer id ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			DepartmentHead d = departmentHeadDao.getDepartmentHead(id);
+	    	if (d == null) throw new ResponseStatusException( HttpStatus.NOT_FOUND, 
+	    			"Department Head not found" );
+	    	return d;
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @PostMapping("/department_heads")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DepartmentHead addDepartmentHead(@RequestHeader("password") String password, @RequestBody DepartmentHead d) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return departmentHeadDao.saveDepartmentHead(d);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    }
+    
+    @PatchMapping("/department_heads/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public DepartmentHead updateDepartmentHead(@RequestHeader("password") String password, @PathVariable Integer id, @RequestBody Map<String,Object> patch ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+
+			DepartmentHead d = departmentHeadDao.getDepartmentHead(id);
+	    	
+	    	for (String key : patch.keySet()) {
+	    		
+	    		switch(key) {
+	    		
+		    		case "name":
+		    			d.setName( (String) patch.get(key));
+		    			break;
+		    		case "phone":
+		    			d.setPhone( (String) patch.get(key));
+		    			break;    
+		    		case "email":
+		    			d.setEmail( (String) patch.get(key));
+		    		default:
+		    			break;
+	    		}
+	    		
+	    	}
+	    	
+	    	d = departmentHeadDao.saveDepartmentHead(d);
+	    	return d;
+
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+   
+    }
+    
+    @DeleteMapping("/department_heads/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDepartmentHead(@RequestHeader("password") String password, @PathVariable Integer id) {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			departmentHeadDao.deleteDepartmentHead(id);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @Autowired
+    private ApplicationCoordinatorDao applicationCoordinatorDao;
+
+    @GetMapping("/application_coordinators")
+    public List<ApplicationCoordinator> applicationCoordinators(@RequestHeader("password") String password, ModelMap models) throws Exception {
+    	
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return applicationCoordinatorDao.getApplicationCoordinators();
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+    }
+    
+    @GetMapping("/application_coordinators/{id}")
+    public ApplicationCoordinator applicationCoordinator(@RequestHeader("password") String password, @PathVariable Integer id ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			ApplicationCoordinator a = applicationCoordinatorDao.getApplicationCoordinator(id);
+	    	if (a == null) throw new ResponseStatusException( HttpStatus.NOT_FOUND, 
+	    			"Application Coordinator not found" );
+	    	return a;
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @PostMapping("/application_coordinators")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApplicationCoordinator addApplicationCoordinator(@RequestHeader("password") String password, @RequestBody ApplicationCoordinator a) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return applicationCoordinatorDao.saveApplicationCoordinator(a);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    }
+    
+    @PatchMapping("/application_coordinators/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ApplicationCoordinator updateApplicationCoordinator(@RequestHeader("password") String password, @PathVariable Integer id, @RequestBody Map<String,Object> patch ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+
+			ApplicationCoordinator a = applicationCoordinatorDao.getApplicationCoordinator(id);
+	    	
+	    	for (String key : patch.keySet()) {
+	    		
+	    		switch(key) {
+	    		
+		    		case "name":
+		    			a.setName( (String) patch.get(key));
+		    			break;
+		    		case "phone":
+		    			a.setPhone( (String) patch.get(key));
+		    			break;    
+		    		case "email":
+		    			a.setEmail( (String) patch.get(key));
+		    		default:
+		    			break;
+	    		}
+	    		
+	    	}
+	    	
+	    	a = applicationCoordinatorDao.saveApplicationCoordinator(a);
+	    	return a;
+
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+   
+    }
+    
+    @DeleteMapping("/application_coordinators/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteApplicationCoordinator(@RequestHeader("password") String password, @PathVariable Integer id) {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			applicationCoordinatorDao.deleteApplicationCoordinator(id);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @Autowired
+    private DeptInfoSecurityOfficerDao deptInfoSecurityOfficerDao;
+
+    @GetMapping("/dept_info_security_officers")
+    public List<DeptInfoSecurityOfficer> deptInfoSecurityOfficers(@RequestHeader("password") String password, ModelMap models) throws Exception {
+    	
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return deptInfoSecurityOfficerDao.getDeptInfoSecurityOfficers();
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+    }
+    
+    @GetMapping("/dept_info_security_officers/{id}")
+    public DeptInfoSecurityOfficer deptInfoSecurityOfficer(@RequestHeader("password") String password, @PathVariable Integer id ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			DeptInfoSecurityOfficer d = deptInfoSecurityOfficerDao.getDeptInfoSecurityOfficer(id);
+	    	if (d == null) throw new ResponseStatusException( HttpStatus.NOT_FOUND, 
+	    			"Department Info Security Officer not found" );
+	    	return d;
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
+    
+    @PostMapping("/dept_info_security_officers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DeptInfoSecurityOfficer addDeptInfoSecurityOfficer(@RequestHeader("password") String password, @RequestBody DeptInfoSecurityOfficer d) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			return deptInfoSecurityOfficerDao.saveDeptInfoSecurityOfficer(d);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    }
+    
+    @PatchMapping("/dept_info_security_officers/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public DeptInfoSecurityOfficer updateDeptInfoSecurityOfficer(@RequestHeader("password") String password, @PathVariable Integer id, @RequestBody Map<String,Object> patch ) throws Exception {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+
+			DeptInfoSecurityOfficer d = deptInfoSecurityOfficerDao.getDeptInfoSecurityOfficer(id);
+	    	
+	    	for (String key : patch.keySet()) {
+	    		
+	    		switch(key) {
+	    		
+		    		case "name":
+		    			d.setName( (String) patch.get(key));
+		    			break;
+		    		case "phone":
+		    			d.setPhone( (String) patch.get(key));
+		    			break;    
+		    		case "email":
+		    			d.setEmail( (String) patch.get(key));
+		    		default:
+		    			break;
+	    		}
+	    		
+	    	}
+	    	
+	    	d = deptInfoSecurityOfficerDao.saveDeptInfoSecurityOfficer(d);
+	    	return d;
+
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+		
+   
+    }
+    
+    @DeleteMapping("/dept_info_security_officers/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDeptInfoSecurityOfficer(@RequestHeader("password") String password, @PathVariable Integer id) {
+    	String dbPassword = adminDao.getAdmin().getPassword();
+		if (dbPassword.equals(password)) {	
+			deptInfoSecurityOfficerDao.deleteDeptInfoSecurityOfficer(id);
+		} else
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"User does not have authorization to view this page");
+    
+    }
 	
 }

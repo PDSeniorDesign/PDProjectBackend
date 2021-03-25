@@ -17,15 +17,21 @@ public class Agreements {
 		String email = "";
 		String agreementName = "";
 		String documentId = "";
+		String workflowId = "";
+		String fileLabel = "";
 		if (serviceRequest.isEmployee()) {
 			email = serviceRequest.getEmployeeEmailAddress();
 			agreementName = "PD Employee Agreement";
 			documentId = "CBJCHBCAABAA6bgfjW_Jk95KdQ_mzNiuHKcjtz153u2K";
+			workflowId = "CBJCHBCAABAAuUhFxvOEUgcP2WS8vc6eh5V5JIrV-eXM";
+			fileLabel = "PD Employee Forms";
 		}
 		else {
 			email = serviceRequest.getCompanyEmailAddress();
 			agreementName = "PD Contractor Agreement";
 			documentId = "CBJCHBCAABAANFj6EXi626GhARMLjULZrrA-CHakWujD";
+			workflowId = "CBJCHBCAABAAGS4Wk52tdTWxItnuzePdtwN5gy_awOTi";
+			fileLabel = "PD Contractor Forms";
 		}
 		
 
@@ -43,13 +49,20 @@ public class Agreements {
 
 		JSONObject requestJson = new JSONObject();
 		ArrayList<JSONObject> fileInfos = new ArrayList<JSONObject>();
-		JSONObject libraryDocId = new JSONObject();
-		libraryDocId.put("libraryDocumentId", documentId);
-		fileInfos.add(libraryDocId);
+		
+		JSONObject fileInfo = new JSONObject();
+		fileInfo.put("libraryDocumentId", documentId);
+		
+		fileInfo.put("label", fileLabel);
+		
+		
+		fileInfos.add(fileInfo);
 		requestJson.put("fileInfos", fileInfos);
 		requestJson.put("name", agreementName);
 		requestJson.put("state", "IN_PROCESS");
 		requestJson.put("signatureType", "ESIGN");
+		
+		requestJson.put("workflowId", workflowId);
 		
 		ArrayList<JSONObject> participantSetsInfo = new ArrayList<JSONObject>();
 
@@ -62,6 +75,7 @@ public class Agreements {
 		participantSets1Info.put("order", 1);
 		participantSets1Info.put("role", "SIGNER");
 		participantSets1Info.put("memberInfos", memberInfos1);
+		participantSets1Info.put("label", "Signer");
 		participantSetsInfo.add(participantSets1Info);
 
 		// Add 2nd participant (Manager)
@@ -72,8 +86,9 @@ public class Agreements {
 			memberInfo2Json.put("email", serviceRequest.getManagerEmail());
 			memberInfos2.add(memberInfo2Json);
 			participantSets2Info.put("order", 2);
-			participantSets2Info.put("role", "APPROVER");
+			participantSets2Info.put("role", "SIGNER");
 			participantSets2Info.put("memberInfos", memberInfos2);
+			participantSets2Info.put("label", "Manager");
 			participantSetsInfo.add(participantSets2Info);
 		}
 
@@ -85,8 +100,9 @@ public class Agreements {
 			memberInfo3Json.put("email", serviceRequest.getDivChiefManagerEmail());
 			memberInfos3.add(memberInfo3Json);
 			participantSets3Info.put("order", 3);
-			participantSets3Info.put("role", "APPROVER");
+			participantSets3Info.put("role", "SIGNER");
 			participantSets3Info.put("memberInfos", memberInfos3);
+			participantSets3Info.put("label", "Div Chief / Manager");
 			participantSetsInfo.add(participantSets3Info);
 		}
 
@@ -98,8 +114,9 @@ public class Agreements {
 			memberInfo4Json.put("email", serviceRequest.getDepartmentHeadEmail());
 			memberInfos4.add(memberInfo4Json);
 			participantSets4Info.put("order", 4);
-			participantSets4Info.put("role", "APPROVER");
+			participantSets4Info.put("role", "SIGNER");
 			participantSets4Info.put("memberInfos", memberInfos4);
+			participantSets4Info.put("label", "Department Head");
 			participantSetsInfo.add(participantSets4Info);
 		}
 
@@ -111,8 +128,9 @@ public class Agreements {
 			memberInfo5Json.put("email", serviceRequest.getDeptInfoSecurityOfficerEmail());
 			memberInfos5.add(memberInfo5Json);
 			participantSets5Info.put("order", 5);
-			participantSets5Info.put("role", "APPROVER");
+			participantSets5Info.put("role", "SIGNER");
 			participantSets5Info.put("memberInfos", memberInfos5);
+			participantSets5Info.put("label", "Dept Info Security Officer");
 			participantSetsInfo.add(participantSets5Info);
 		}
 
@@ -124,8 +142,9 @@ public class Agreements {
 			memberInfo6Json.put("email", serviceRequest.getApplicationCoordinatorEmail());
 			memberInfos6.add(memberInfo6Json);
 			participantSets6Info.put("order", 6);
-			participantSets6Info.put("role", "APPROVER");
+			participantSets6Info.put("role", "SIGNER");
 			participantSets6Info.put("memberInfos", memberInfos6);
+			participantSets6Info.put("label", "Application Coordinator");
 			participantSetsInfo.add(participantSets6Info);
 		}
 

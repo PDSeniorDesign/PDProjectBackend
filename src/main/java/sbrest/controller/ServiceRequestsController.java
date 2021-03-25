@@ -10,6 +10,8 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +31,7 @@ import sbrest.model.dao.AdminDao;
 import sbrest.model.dao.ServiceRequestDao;
 import sbrest.service.SendEmail;
 import sbrest.service.ServiceRequestService;
+import sbrest.signapi.AgreementEvents;
 import sbrest.signapi.Agreements;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -54,8 +57,11 @@ public class ServiceRequestsController {
 	}
 
 	@GetMapping("/{requestNumber}")
-	public ServiceRequest get(@PathVariable Integer requestNumber) {
+	public ServiceRequest get(@PathVariable Integer requestNumber) throws Exception {
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
+		
+		s = updateRequestStatus(s);
+		
 		if (s == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service Request not found");
 		return s;
@@ -469,7 +475,7 @@ public class ServiceRequestsController {
 	
 	public void checkSubmitted(ServiceRequest s) {
 		if (s.isSubmitted()) {
-			s.setRequestStatus("Submitted");
+			s.setRequestStatus("SUBMITTED_FOR_REVIEW");
 			String pattern = "MM/dd/yyyy";
 			DateFormat d = new SimpleDateFormat(pattern);
 			Date currentDate = Calendar.getInstance().getTime();
@@ -477,18 +483,49 @@ public class ServiceRequestsController {
 			
 			// TODO: Send an email to admin
 			String adminEmail = adminDao.getAdmin().getEmail();
-			String subject = "New Request Submitted";
+			String subject = "New Request Submitted (#" + s.getRequestNumber() + ")";
 			String text = "A new service request was submitted by " + s.getFirstName() + " " + s.getLastName()
-					+ ". You can review the request at " + "http://localhost:8080/admin/service_requests/"
-					+ s.getRequestNumber();
-
+					+ ". The request number is "+ s.getRequestNumber() +".\nLog in to review the request at " + "http://localhost:4200/admin"
+					+ "\n\n" + "[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]";
+ 
 			sendEmail.sendSimpleMessage(adminEmail, subject, text);
 
 		}
 		else {
-			s.setRequestStatus("Draft");
+			s.setRequestStatus("DRAFT");
 			s.setSubmitDate("");
 		}
+	}
+	
+	@Async
+	@Scheduled(cron = "0 1 1 * * ?")
+	public void updateRequestStatuses() throws Exception {
+		List<ServiceRequest> serviceRequests = serviceRequestDao.getServiceRequests();
+		for (ServiceRequest s : serviceRequests) {
+			if (s.getAgreementId() != null) {
+				if (!s.getAgreementId().isEmpty() && s.getRequestStatus() != "RECALLED" && s.getRequestStatus() != "ACTION_COMPLETED") {
+					String requestStatus = AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId());
+					s.setRequestStatus(requestStatus);
+					
+					serviceRequestDao.saveServiceRequest(s);
+				}
+			}
+		}
+	}
+	
+	public ServiceRequest updateRequestStatus(ServiceRequest s) throws Exception {
+		
+		if (s.getAgreementId() != null) {
+			if (!s.getAgreementId().isEmpty() && s.getRequestStatus() != "RECALLED" && s.getRequestStatus() != "ACTION_COMPLETED") {
+				String requestStatus = AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId());
+				s.setRequestStatus(requestStatus);
+					
+				s = serviceRequestDao.saveServiceRequest(s);
+			}
+		}
+		
+		return s;
+		
 	}
 	
 }
