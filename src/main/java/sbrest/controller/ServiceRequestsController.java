@@ -481,7 +481,6 @@ public class ServiceRequestsController {
 			Date currentDate = Calendar.getInstance().getTime();
 			s.setSubmitDate(d.format(currentDate));
 			
-			// TODO: Send an email to admin
 			String adminEmail = adminDao.getAdmin().getEmail();
 			String subject = "New Request Submitted (#" + s.getRequestNumber() + ")";
 			String text = "A new service request was submitted by " + s.getFirstName() + " " + s.getLastName()
@@ -489,6 +488,22 @@ public class ServiceRequestsController {
 					+ "\n\n" + "[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]";
  
 			sendEmail.sendSimpleMessage(adminEmail, subject, text);
+			
+			String userEmail = "";
+			if (s.isEmployee()) {
+				userEmail = s.getEmployeeEmailAddress();
+			}
+			else {
+				userEmail = s.getCompanyEmailAddress();
+			}
+			
+			String userEmailSubject = "New Request Submitted (#" + s.getRequestNumber() + ")";
+			String userEmailText = "Hello " + s.getFirstName() + ",\n\n"
+					+ "Thank you for submitting your request. Here is your request number: "+ s.getRequestNumber() +"\nPlease store this request number for your records."
+					+ "\n\n" + "[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]";
+ 
+			sendEmail.sendSimpleMessage(userEmail, userEmailSubject, userEmailText);
+
 
 		}
 		else {
