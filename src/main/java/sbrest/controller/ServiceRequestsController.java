@@ -30,7 +30,6 @@ import sbrest.model.ServiceRequest;
 import sbrest.model.dao.AdminDao;
 import sbrest.model.dao.ServiceRequestDao;
 import sbrest.service.SendEmail;
-import sbrest.service.ServiceRequestService;
 import sbrest.signapi.AgreementEvents;
 import sbrest.signapi.Agreements;
 
@@ -47,9 +46,6 @@ public class ServiceRequestsController {
 	
 	@Autowired
 	private ServiceRequestDao serviceRequestDao;
-
-	@Autowired
-	private ServiceRequestService serviceRequestService;
 
 	@GetMapping
 	public List<ServiceRequest> serviceRequests(ModelMap models) {
@@ -77,7 +73,7 @@ public class ServiceRequestsController {
 		// Check if it exists in database
 		// If it does exists, regenerate the number (Do this until six digit code is
 		// unique)
-		while (serviceRequestService.existsByRequestNumber(randomRequestNumber)) {
+		while (existsByRequestNumber(randomRequestNumber)) {
 			randomRequestNumber = 100000 + rnd.nextInt(900000);
 		}
 
@@ -514,6 +510,22 @@ public class ServiceRequestsController {
 			s.setRequestStatus("DRAFT");
 			s.setSubmitDate("");
 		}
+	}
+	
+	/**
+	 * Will fetch a service request by request number. If it exists, then that means
+	 * that the request number has already been used and is not unique.
+	 * 
+	 * @param requestNumber This is the 6 digit code
+	 * @return Will return true if the request number is already used. A Service
+	 *         Request using this request number already exists.
+	 */
+	public boolean existsByRequestNumber(Integer requestNumber) {
+		ServiceRequest serviceRequest = serviceRequestDao.getServiceRequest(requestNumber);
+		if (serviceRequest != null) {
+			return true;
+		}
+		return false;
 	}
 	
 	@Async
