@@ -939,12 +939,11 @@ public class Agreements {
 			fieldJsonArray.add(managerEmail);
 		}
 		
-		if (serviceRequest.getManagerName() != null) {
-			JSONObject managerName = new JSONObject();
-			managerName.put("fieldName", "managerName");
-			managerName.put("defaultValue", serviceRequest.getManagerName());
-			fieldJsonArray.add(managerName);
-		}
+		String managerName = serviceRequest.getManagerFirstName() + " " + serviceRequest.getManagerLastName();
+		JSONObject managerNameJson = new JSONObject();
+		managerNameJson.put("fieldName", "managerName");
+		managerNameJson.put("defaultValue", managerName);
+		fieldJsonArray.add(managerNameJson);
 		
 		if (serviceRequest.getManagerPhone() != null) {
 			JSONObject managerPhone = new JSONObject();
