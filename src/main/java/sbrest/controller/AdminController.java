@@ -392,8 +392,11 @@ public class AdminController {
 				case "isSubmitted":
 					s.setSubmitted((boolean) patch.get(key));
 					break;
-				case "managerName":
-					s.setManagerName((String) patch.get(key));
+				case "managerFirstName":
+					s.setManagerFirstName((String) patch.get(key));
+					break;
+				case "managerLastName":
+					s.setManagerLastName((String) patch.get(key));
 					break;
 				case "managerPhone":
 					s.setManagerPhone((String) patch.get(key));

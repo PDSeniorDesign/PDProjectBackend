@@ -153,7 +153,9 @@ public class ServiceRequest {
 	
 	// Added fields to store participant info.
 	@Column(length = 150)
-	private String managerName;
+	private String managerFirstName;
+	@Column(length = 150)
+	private String managerLastName;
 	@Column(length = 150)
 	private String managerEmail;
 	@Column(length = 150)
@@ -924,13 +926,22 @@ public class ServiceRequest {
 		this.isSubmitted = isSubmitted;
 	}
 
-	public String getManagerName() {
-		return managerName;
+	public String getManagerFirstName() {
+		return managerFirstName;
 	}
 
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
+	public void setManagerFirstName(String managerFirstName) {
+		this.managerFirstName = managerFirstName;
 	}
+	
+	public String getManagerLastName() {
+		return managerLastName;
+	}
+
+	public void setManagerLastName(String managerLastName) {
+		this.managerLastName = managerLastName;
+	}
+
 
 	public String getManagerEmail() {
 		return managerEmail;

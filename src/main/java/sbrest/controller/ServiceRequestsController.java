@@ -175,7 +175,8 @@ public class ServiceRequestsController {
 		originalServiceRequest.setSocialNetworkingTwitter(s.isSocialNetworkingTwitter());
 		originalServiceRequest.setSocialNetworkingLinkedIn(s.isSocialNetworkingLinkedIn());
 		originalServiceRequest.setSubmitted(s.isSubmitted());
-		originalServiceRequest.setManagerName(s.getManagerName());
+		originalServiceRequest.setManagerFirstName(s.getManagerFirstName());
+		originalServiceRequest.setManagerLastName(s.getManagerLastName());
 		originalServiceRequest.setManagerEmail(s.getManagerEmail());
 		originalServiceRequest.setManagerPhone(s.getManagerPhone());
 		originalServiceRequest.setManagerTitle(s.getManagerTitle());
@@ -440,8 +441,11 @@ public class ServiceRequestsController {
 			case "isSubmitted":
 				s.setSubmitted((boolean) patch.get(key));
 				break;
-			case "managerName":
-				s.setManagerName((String) patch.get(key));
+			case "managerFirstName":
+				s.setManagerFirstName((String) patch.get(key));
+				break;
+			case "managerLastName":
+				s.setManagerLastName((String) patch.get(key));
 				break;
 			case "managerPhone":
 				s.setManagerPhone((String) patch.get(key));
