@@ -166,6 +166,10 @@ public class AdminController {
 					s.setComplete((boolean) patch.get(key));
 					//checkCompleteness(s);
 					break;
+				case "complete":
+					s.setComplete((boolean) patch.get(key));
+					//checkCompleteness(s);
+					break;
 					// A.V.
 				case "replaceLostToken":
 					s.setReplaceLostToken((boolean) patch.get(key));
@@ -449,7 +453,7 @@ public class AdminController {
 				}
 			}
 
-			if (patch.keySet().contains("isComplete")) {
+			if (patch.keySet().contains("isComplete") || patch.keySet().contains("complete")) {
 				checkCompleteness(s);	
 			}
 			
