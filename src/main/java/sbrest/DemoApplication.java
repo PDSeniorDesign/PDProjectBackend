@@ -1,5 +1,6 @@
 package sbrest;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +17,15 @@ public class DemoApplication {
 	}
 	
 	// Cors Configuration
+	@Value("${client.url}")
+	private String clientUrl;
+	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+				registry.addMapping("/**").allowedOrigins(clientUrl);
 				
 			}
 		};
