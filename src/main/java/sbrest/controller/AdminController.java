@@ -3,6 +3,7 @@ package sbrest.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ import sbrest.model.dao.ServiceRequestDao;
 import sbrest.signapi.AgreementEvents;
 import sbrest.signapi.Agreements;
 
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -93,7 +94,8 @@ public class AdminController {
 			if (s == null)
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service Request not found");
 			
-			s = updateRequestStatus(s);
+			s = AgreementEvents.updateRequestStatus(s);
+			serviceRequestDao.saveServiceRequest(s);
 			
 			return s;
 		} else {
@@ -471,23 +473,10 @@ public class AdminController {
 	public void checkCompleteness(ServiceRequest s) throws Exception {
 		if (s.isComplete()) {
 			s.setAgreementId(Agreements.sendAgreement(s));
-			s.setRequestStatus(AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId()));
+			// 5 second timeout - account for time for Adobe to send first email
+			TimeUnit.SECONDS.sleep(5);
+			s = AgreementEvents.updateRequestStatus(s);
 		}
-	}
-	
-	public ServiceRequest updateRequestStatus(ServiceRequest s) throws Exception {
-		
-		if (s.getAgreementId() != null) {
-			if (!s.getAgreementId().isEmpty() && s.getRequestStatus() != "RECALLED" && s.getRequestStatus() != "ACTION_COMPLETED") {
-				String requestStatus = AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId());
-				s.setRequestStatus(requestStatus);
-					
-				s = serviceRequestDao.saveServiceRequest(s);
-			}
-		}
-		
-		return s;
-		
 	}
 
 	// New Admin Endpoints for participant info.

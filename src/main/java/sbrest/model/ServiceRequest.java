@@ -2,8 +2,10 @@ package sbrest.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +33,9 @@ public class ServiceRequest {
 	private boolean addLogonId;
 	private boolean changeLogonId;
 	private boolean deleteLogonId;
+	
+	@Column(length = 5000) 
+	private ArrayList<String> eventHistory;
 	
 	@Column(length = 50)
 	private String lastName;
@@ -194,11 +199,13 @@ public class ServiceRequest {
 	
 
 	public ServiceRequest() {
-		String pattern = "MM/dd/yyyy";
+		String pattern = "yyyy-MM-dd hh:mm:ss";
 		DateFormat d = new SimpleDateFormat(pattern);
 		Date currentDate = Calendar.getInstance().getTime();
 		this.createDate = d.format(currentDate);
-		this.requestStatus = "DRAFT";
+		this.requestStatus = "Draft";
+		this.eventHistory = new ArrayList<String>();
+		this.eventHistory.add("(" + this.getCreateDate() + ") Request draft created");
 		
 		this.agreementId = "";
 		this.lastName = "";
@@ -1061,6 +1068,14 @@ public class ServiceRequest {
 
 	public void setApplicationCoordinatorPhone(String applicationCoordinatorPhone) {
 		this.applicationCoordinatorPhone = applicationCoordinatorPhone;
+	}
+
+	public ArrayList<String> getEventHistory() {
+		return eventHistory;
+	}
+
+	public void setEventHistory(ArrayList<String> eventHistory) {
+		this.eventHistory = eventHistory;
 	}
 
 }

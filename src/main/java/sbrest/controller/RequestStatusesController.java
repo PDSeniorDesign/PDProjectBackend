@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sbrest.model.ServiceRequest;
 import sbrest.model.dao.ServiceRequestDao;
 
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
 @RequestMapping("/request_statuses")
 public class RequestStatusesController {
