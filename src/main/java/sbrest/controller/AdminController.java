@@ -40,7 +40,6 @@ import sbrest.model.dao.ServiceRequestDao;
 import sbrest.signapi.AgreementEvents;
 import sbrest.signapi.Agreements;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {

@@ -33,7 +33,6 @@ import sbrest.service.SendEmail;
 import sbrest.signapi.AgreementEvents;
 import sbrest.signapi.Agreements;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/service_requests")
 public class ServiceRequestsController {
