@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,7 +45,7 @@ import sbrest.signapi.Agreements;
 @RequestMapping("/admin")
 public class AdminController {
 //These functions are for the admin user
-	
+		
 	@Autowired
     private AdminDao adminDao;
 	
@@ -52,6 +53,7 @@ public class AdminController {
 	private ServiceRequestDao serviceRequestDao;
 	
 	//Gets some details of all specified Service Request if user is admin
+	@CrossOrigin(origins= "*")
 	@GetMapping("/service_requests")
 	public List<RequestStatusResponse> getRequestStatusByRequestNumber(@RequestHeader("password") String password) {		
 		List<ServiceRequest> serviceRequests = serviceRequestDao.getServiceRequests();
@@ -80,6 +82,7 @@ public class AdminController {
 	}	
 	
 	//Gets all details of a specified Service Request if user is admin
+	@CrossOrigin(origins= "*")
 	@GetMapping("/service_requests/{requestNumber}")
 	public ServiceRequest get(@RequestHeader("password") String password, @PathVariable Integer requestNumber) throws Exception {
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
@@ -102,6 +105,7 @@ public class AdminController {
 	}
 	
 	//Admin user can change the password
+	@CrossOrigin(origins= "*")
 	@PatchMapping("/reset_password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void update(@RequestHeader("password") String oldPassword, @RequestHeader("new-password") String newPassword) {
@@ -121,6 +125,7 @@ public class AdminController {
 	}
 	
 	//Admin user can review a submitted request and edit field values
+	@CrossOrigin(origins= "*")
 	@PatchMapping("/service_requests/{requestNumber}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public ServiceRequest update(@RequestHeader("password") String password, @PathVariable Integer requestNumber, @RequestBody Map<String, Object> patch) throws Exception {
@@ -493,7 +498,8 @@ public class AdminController {
 	// Password-protected endpoints.
 	@Autowired
     private DivChiefManagerDao divChiefManagerDao;
-
+	
+	@CrossOrigin(origins= "*")
     @GetMapping("/div_chief_managers")
     public List<DivChiefManager> divChiefManagers(@RequestHeader("password") String password, ModelMap models) throws Exception {
     	
@@ -506,6 +512,7 @@ public class AdminController {
 		
     }
     
+	@CrossOrigin(origins= "*")
     @GetMapping("/div_chief_managers/{id}")
     public DivChiefManager divChiefManager(@RequestHeader("password") String password, @PathVariable Integer id ) throws Exception {
     	String dbPassword = adminDao.getAdmin().getPassword();
@@ -520,6 +527,7 @@ public class AdminController {
     
     }
     
+	@CrossOrigin(origins= "*")
     @PostMapping("/div_chief_managers")
     @ResponseStatus(HttpStatus.CREATED)
     public DivChiefManager addDivChiefManager(@RequestHeader("password") String password, @RequestBody DivChiefManager d) throws Exception {
@@ -531,6 +539,7 @@ public class AdminController {
 					"User does not have authorization to view this page");
     }
     
+	@CrossOrigin(origins= "*")
     @PatchMapping("/div_chief_managers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public DivChiefManager updateDivChiefManager(@RequestHeader("password") String password, @PathVariable Integer id, @RequestBody Map<String,Object> patch ) throws Exception {
@@ -567,6 +576,7 @@ public class AdminController {
    
     }
     
+	@CrossOrigin(origins= "*")
     @DeleteMapping("/div_chief_managers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDivChiefManager(@RequestHeader("password") String password, @PathVariable Integer id) {
@@ -582,6 +592,7 @@ public class AdminController {
     @Autowired
     private DepartmentHeadDao departmentHeadDao;
 
+    @CrossOrigin(origins= "*")
     @GetMapping("/department_heads")
     public List<DepartmentHead> departmentHeads(@RequestHeader("password") String password, ModelMap models) throws Exception {
     	
@@ -594,6 +605,7 @@ public class AdminController {
 		
     }
     
+    @CrossOrigin(origins= "*")
     @GetMapping("/department_heads/{id}")
     public DepartmentHead departmentHead(@RequestHeader("password") String password, @PathVariable Integer id ) throws Exception {
     	String dbPassword = adminDao.getAdmin().getPassword();
@@ -608,6 +620,7 @@ public class AdminController {
     
     }
     
+    @CrossOrigin(origins= "*")
     @PostMapping("/department_heads")
     @ResponseStatus(HttpStatus.CREATED)
     public DepartmentHead addDepartmentHead(@RequestHeader("password") String password, @RequestBody DepartmentHead d) throws Exception {
@@ -619,6 +632,7 @@ public class AdminController {
 					"User does not have authorization to view this page");
     }
     
+    @CrossOrigin(origins= "*")
     @PatchMapping("/department_heads/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public DepartmentHead updateDepartmentHead(@RequestHeader("password") String password, @PathVariable Integer id, @RequestBody Map<String,Object> patch ) throws Exception {
@@ -655,6 +669,7 @@ public class AdminController {
    
     }
     
+    @CrossOrigin(origins= "*")
     @DeleteMapping("/department_heads/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartmentHead(@RequestHeader("password") String password, @PathVariable Integer id) {
