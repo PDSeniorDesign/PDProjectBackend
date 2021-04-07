@@ -55,7 +55,8 @@ public class ServiceRequestsController {
 	public ServiceRequest get(@PathVariable Integer requestNumber) throws Exception {
 		ServiceRequest s = serviceRequestDao.getServiceRequest(requestNumber);
 		
-		s = updateRequestStatus(s);
+		s = AgreementEvents.updateRequestStatus(s);
+		serviceRequestDao.saveServiceRequest(s);
 		
 		if (s == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service Request not found");
@@ -474,11 +475,13 @@ public class ServiceRequestsController {
 	
 	public void checkSubmitted(ServiceRequest s) {
 		if (s.isSubmitted()) {
-			s.setRequestStatus("SUBMITTED_FOR_REVIEW");
-			String pattern = "MM/dd/yyyy";
+			s.setRequestStatus("Submitted for Admin Review");
+			String pattern = "yyyy-MM-dd hh:mm:ss";
 			DateFormat d = new SimpleDateFormat(pattern);
 			Date currentDate = Calendar.getInstance().getTime();
+			
 			s.setSubmitDate(d.format(currentDate));
+			s.getEventHistory().add("(" + s.getSubmitDate() + ") Request submitted for Admin review");
 			
 			String adminEmail = adminDao.getAdmin().getEmail();
 			String subject = "New Request Submitted (#" + s.getRequestNumber() + ")";
@@ -506,7 +509,7 @@ public class ServiceRequestsController {
 			
 		}
 		else {
-			s.setRequestStatus("DRAFT");
+			s.setRequestStatus("Draft");
 			s.setSubmitDate("");
 		}
 	}
@@ -532,30 +535,10 @@ public class ServiceRequestsController {
 	public void updateRequestStatuses() throws Exception {
 		List<ServiceRequest> serviceRequests = serviceRequestDao.getServiceRequests();
 		for (ServiceRequest s : serviceRequests) {
-			if (s.getAgreementId() != null) {
-				if (!s.getAgreementId().isEmpty() && s.getRequestStatus() != "RECALLED" && s.getRequestStatus() != "ACTION_COMPLETED") {
-					String requestStatus = AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId());
-					s.setRequestStatus(requestStatus);
-					
-					serviceRequestDao.saveServiceRequest(s);
-				}
-			}
+			s = AgreementEvents.updateRequestStatus(s);
+			serviceRequestDao.saveServiceRequest(s);
 		}
 	}
 	
-	public ServiceRequest updateRequestStatus(ServiceRequest s) throws Exception {
-		
-		if (s.getAgreementId() != null) {
-			if (!s.getAgreementId().isEmpty() && s.getRequestStatus() != "RECALLED" && s.getRequestStatus() != "ACTION_COMPLETED") {
-				String requestStatus = AgreementEvents.getMostRecentAgreementEventType(s.getAgreementId());
-				s.setRequestStatus(requestStatus);
-					
-				s = serviceRequestDao.saveServiceRequest(s);
-			}
-		}
-		
-		return s;
-		
-	}
 	
 }
