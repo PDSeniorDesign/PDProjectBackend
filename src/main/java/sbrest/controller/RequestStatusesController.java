@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import sbrest.model.ServiceRequest;
 import sbrest.model.dao.ServiceRequestDao;
 
-
 @RestController
 @RequestMapping("/request_statuses")
 public class RequestStatusesController {

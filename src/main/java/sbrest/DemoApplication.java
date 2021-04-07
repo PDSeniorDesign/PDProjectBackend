@@ -15,6 +15,21 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
+	
+	// Cors Configuration
+	@Value("${client.url}")
+	private String clientUrl;
+	
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins(clientUrl).allowedMethods("PUT", "DELETE", "POST", "GET");
+			}
+		};
+	}
+	
 
 	// Cors Configuration
 	@Value("${client.url}")
