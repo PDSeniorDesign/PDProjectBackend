@@ -70,46 +70,46 @@ public class AgreementEvents {
 				String participant = "";
 				
 				if (s.isEmployee()) {
-					if (participantEmail.equals(s.getEmployeeEmailAddress())) {
+					if (participantEmail.equalsIgnoreCase(s.getEmployeeEmailAddress())) {
 						matchesFound++;
 						participant = "Employee";
 					}
 				}
 				else {
-					if (participantEmail.equals(s.getCompanyEmailAddress())) {
+					if (participantEmail.equalsIgnoreCase(s.getCompanyEmailAddress())) {
 						matchesFound++;
 						participant = "Contractor";
 					}
 				}
 				
-				if (participantEmail.equals(s.getManagerEmail())) {
+				if (participantEmail.equalsIgnoreCase(s.getManagerEmail())) {
 					matchesFound++;
 					participant = "Manager";
 				}
 				
 				if (s.getDivChiefManagerEmail() != null) {
-					if (participantEmail.equals(s.getDivChiefManagerEmail())) {
+					if (participantEmail.equalsIgnoreCase(s.getDivChiefManagerEmail())) {
 						matchesFound++;
 						participant = "Division Chief";
 					}
 				}
 				
 				if (s.getDepartmentHeadEmail() != null) {
-					if (participantEmail.equals(s.getDepartmentHeadEmail())) {
+					if (participantEmail.equalsIgnoreCase(s.getDepartmentHeadEmail())) {
 						matchesFound++;
 						participant = "Department Head";
 					}
 				}
 				
 				if (s.getDeptInfoSecurityOfficerEmail() != null) {
-					if (participantEmail.equals(s.getDeptInfoSecurityOfficerEmail())) {
+					if (participantEmail.equalsIgnoreCase(s.getDeptInfoSecurityOfficerEmail())) {
 						matchesFound++;
 						participant = "Department Info Security Officer";
 					}
 				}
 				
 				if (s.getApplicationCoordinatorEmail() != null) {
-					if (participantEmail.equals(s.getApplicationCoordinatorEmail())) {
+					if (participantEmail.equalsIgnoreCase(s.getApplicationCoordinatorEmail())) {
 						matchesFound++;
 						participant = "Application Coordinator";
 					}
